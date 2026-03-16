@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+
+        {% block stylesheets %}
+            {# Bootstrap 5.3.8 #}
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+            {# Popper.js 2.11.8 #}
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+
+            {# Flatpickr 4.6.13 #}
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/hr.js"></script>
+
+            {# Font Awesome 7.0.1 #}
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        {# {% if app.user %} #}
+            {% include('_header.html.twig') %}
+        {# {% endif %} #}
+
+        {% for label, messages in app.flashes %}
+            {% if messages is not empty %}
+                <div class="container mt-3">
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {% for message in messages %}
+                            <span>{{ message }}</span>
+                        {% endfor %}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% block body %}
+            <div class="container my-5">
+                <div class="row">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+
+        {% include('_footer.html.twig') %}
+
+        {# Cookie Consent Banner #}
+        {% include('_cookie_consent.html.twig') %}
+
+        <script type="module">
+            import { initCookieConsent } from 'cookie_consent';
+
+            document.addEventListener('DOMContentLoaded', () => {
+                initCookieConsent();
+            });
+        </script>
+    </body>
+</html>

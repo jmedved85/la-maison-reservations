@@ -1,0 +1,293 @@
+NOTES:
+
+- Install PHP 8.3 or higher and these PHP extensions (which are installed and enabled by default in most PHP 8 installations): Ctype, iconv, PCRE, Session, SimpleXML, and Tokenizer;
+
+- Install Composer, which is used to install PHP packages.
+
+- Symfony CLI
+curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash
+sudo apt install symfony-cli
+
+symfony check:requirements
+
+- traditional web app
+symfony new sf-project-starter --webapp
+
+- microservice, console application or API:
+symfony new my_project_directory
+
+- displays information about the project
+bin/console about
+
+- symfony server -
+symfony server:start
+symfony server:start -d
+
+- check whether a project's dependencies contain any known security vulnerability
+symfony check:security
+
+- command that checks security vulnerabilities in the dependencies of the app
+bin/console importmap:audit
+
+
+----------
+MAKE ENTITY
+-----------
+bin/console make:entity
+sh entity-make.sh
+
+
+-------------
+MAKE DATABASE
+-------------
+bin/console doctrine:database:create
+docker compose exec php bin/console doctrine:database:create
+
+
+----------
+MIGRATIONS
+----------
+bin/console doctrine:migrations:diff
+sh diff-migrations.sh
+
+bin/console doctrine:migrations:migrate
+sh migrations-migrate.sh
+
+bin/console make:migration
+docker compose exec php bin/console make:migration
+
+bin/console doctrine:schema:validate
+docker compose exec php bin/console doctrine:schema:validate
+
+- list all migrations
+bin/console doctrine:migrations:list
+docker compose exec php bin/console doctrine:migrations:list
+
+- revert of migration
+bin/console doctrine:migrations:execute 'DoctrineMigrations\Version' --down
+docker compose exec php bin/console doctrine:migrations:execute 'DoctrineMigrations\Version' --down
+
+bin/console doctrine:migrations:execute 'DoctrineMigrations\Version' --up
+docker compose exec php bin/console doctrine:migrations:execute 'DoctrineMigrations\Version' --up
+
+- fixtures
+bin/console doctrine:fixtures:load
+docker compose exec php bin/console doctrine:fixtures:load
+
+vendor/bin/doctrine orm:schema-tool:update --dump-sql
+vendor/bin/doctrine orm:schema-tool:update --force
+
+
+--------
+SECURITY
+--------
+https://symfony.com/doc/7.4/security.html
+
+php bin/console make:user
+docker compose exec php bin/console make:user
+
+php bin/console make:migration
+docker compose exec php bin/console make:migration
+
+php bin/console doctrine:migrations:migrate
+sh migrations-migrate.sh
+
+- You can also manually hash a password by running:
+php bin/console security:hash-password
+
+- registration
+composer require symfonycasts/verify-email-bundle
+php bin/console make:registration-form
+docker compose exec php bin/console make:registration-form
+
+- login
+php bin/console make:security:form-login
+docker compose exec php bin/console make:security:form-login
+
+php bin/console make:controller Login
+docker compose exec php bin/console make:controller Login
+
+- limiting login attempts
+composer require symfony/rate-limiter
+
+- set hashed password
+bin/console security:hash-password
+docker compose exec php bin/console security:hash-password
+
+
+-----------
+.env.local
+-----------
+DATABASE_URL=mysql://root:pass1234@mysql-sf_project_starter:3306/sf-project-starter_dev
+APP_ENV=dev
+APP_DEBUG=true
+
+
+------------------
+DEFAULT ADMIN USER
+------------------
+username: admin@net.com
+password: admin1234
+
+INSERT INTO `sf-project-starter_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (1, 'admin@net.com', 'admin', '$2y$13$woWveCWpnhEiWPirdbvZu.nBRaKujD07uaFiJhkI/eEtQs5z9S36e', '["ROLE_ADMIN"]', 'Admin', 'User', 1);
+
+
+------------------
+DEFAULT USER
+------------------
+username: user@net.com
+password: user1234
+
+INSERT INTO `sf-project-starter_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (2, 'user@net.com', 'user', '$2y$13$Yfbvi3rzhcRV4Y3Adw4q3ekiq4R01p0n.tEIpwK7ls7bdVivmHu4e', '["ROLE_USER"]', 'Joe', 'Doe', 1);
+
+
+------
+ASSETS
+------
+- styles/custom.css
+- app.js (if using importmap)
+
+composer require symfony/asset-mapper
+
+bin/console cache:clear
+sh clear-cache.sh
+
+bin/console assets:install
+docker compose exec php bin/console assets:install
+
+bin/console debug:asset-map
+docker compose exec php bin/console debug:asset-map
+
+bin/console asset-map:compile
+sh asset-map-compile.sh
+
+
+--------
+PHP-STAN
+--------
+composer require --dev phpstan/phpstan
+vendor/bin/phpstan analyze --memory-limit=1G
+sh phpstan.sh
+
+
+------------
+PHP-CS-Fixer
+------------
+composer require cs-fixer-shim
+./vendor/bin/php-cs-fixer
+./vendor/bin/php-cs-fixer fix
+
+
+-----------
+CODESNIFFER
+-----------
+composer require --dev squizlabs/php_codesniffer
+
+vendor/bin/phpcs src
+vendor/bin/phpcbf src
+
+
+------
+DOCKER
+------
+sh up.sh
+sh down.sh
+sh asset-map-compile.sh
+sh clear-cache.sh
+sh diff-migrations.sh
+sh entity-make.sh
+sh migrations-migrate.sh
+sh router-debug.sh
+sh lint-twig.sh
+sh phpstan.sh
+sh fix.sh
+
+- IMPORTANT!!!
+- use 'docker compose exec php' in front of the 'bin/console' command if app is running in docker
+
+docker compose exec php bin/console cache:clear
+docker compose exec php bin/console make:entity
+docker compose exec php bin/console doctrine:migrations:diff
+docker compose exec php bin/console doctrine:migrations:migrate
+docker compose exec php bin/console asset-map:compile
+
+- mkdir uploads/documents permission
+chmod 777 /home/user/directory/project/anotherdir
+
+- change permissions
+sudo chown user:user security.yaml
+
+
+------
+MAILER
+------
+###> symfony/mailer ###
+MAILER_DSN=smtp://mailpit-sf_project_starter:1025
+###< symfony/mailer ###
+
+
+-----
+TESTS
+-----
+- execute query on the server which is included in '/database/sf-project-starter_test.sql'
+
+./vendor/bin/phpunit
+
+- docker env
+docker compose exec php ./vendor/bin/phpunit
+
+-------------
+DEPLOY SCRIPT
+-------------
+- change scripts command in composer.json
+
+"scripts": {
+    "post-install-cmd": [],
+    "post-update-cmd": []
+},
+
+- sh deploy.sh
+
+
+--------------
+APP PRODUCTION
+--------------
+- clear cache
+php bin/console cache:clear --env=prod --no-debug
+
+For a production Symfony application, there are several additional commands you might want to use to optimize the performance and ensure everything runs smoothly:
+
+- Warm up the cache: After clearing the cache, you can warm it up to improve the application’s initial response time:
+php bin/console cache:warmup --env=prod --no-debug
+
+- Optimize the autoloader: Symfony's autoloader can be optimized for production to reduce the overhead of autoloading classes:
+composer install --no-dev --optimize-autoloader --prefer-dist
+
+- Generate a production-ready container: This command compiles the service container into a highly optimized form for production, improving performance:
+php bin/console cache:clear --env=prod --no-debug
+
+- Run migrations: Ensure your database schema is up to date by running any pending migrations:
+php bin/console doctrine:migrations:migrate --env=prod --no-interaction
+
+- Clear Doctrine metadata cache: To ensure that the Doctrine ORM's metadata is up-to-date and optimized:
+php bin/console doctrine:cache:clear-metadata --env=prod
+
+- Clear query cache: Clear the query cache to avoid outdated or inefficient queries being executed:
+php bin/console doctrine:cache:clear-query --env=prod
+
+- Clear result cache: Clear the result cache to remove any cached results of database queries:
+php bin/console doctrine:cache:clear-result --env=prod
+
+- Warm up assets: In production, assets like CSS and JavaScript files should be compiled and optimized.
+php bin/console assets:install --env=prod
+
+- Compile assets
+php bin/console asset-map:compile --env=prod
+
+- Check the Symfony health status: It's good practice to monitor your application’s status. Symfony's health check can give you useful insights:
+php bin/console server:status
+
+- Enable Profiler in production (optional): Although it’s not recommended for production, if you need to enable the profiler for debugging, you can do so:
+php bin/console debug:router --env=prod
+
+These commands will help ensure that your Symfony application is optimized, the environment is correctly configured, and the application runs efficiently in production.

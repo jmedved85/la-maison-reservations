@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ isEdit ? 'user_edit'|trans : 'register_title'|trans }}{% endblock %}
+
+{% block content %}
+    <div id="register-template" class="d-flex justify-content-center align-items-center">
+         <div class="col-md-8 col-lg-5">
+            {{ form_start(registrationForm, { 'attr': { 'id': 'register-form', 'class': 'card p-4 shadow-sm' } }) }}
+                <h3 class="mb-3 font-weight-normal text-center">
+                    {{ isEdit ? 'user_edit'|trans : 'register_user'|trans }}
+                </h3>
+
+                {{ form_errors(registrationForm) }}
+
+                <div class="form-floating mb-3">
+                    {{ form_widget(registrationForm.firstName, { 'attr': { 'placeholder': 'first_name'|trans } }) }}
+                    <label for="{{ registrationForm.firstName.vars.id }}">{{ 'first_name'|trans }}</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form_widget(registrationForm.lastName, { 'attr': { 'placeholder': 'last_name'|trans } }) }}
+                    <label for="{{ registrationForm.lastName.vars.id }}">{{ 'last_name'|trans }}</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form_widget(registrationForm.email, { 'attr': { 'placeholder': 'email'|trans } }) }}
+                    <label for="{{ registrationForm.email.vars.id }}">{{ 'email'|trans }}</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form_widget(registrationForm.plainPassword, { 'attr': { 'placeholder': 'password'|trans } }) }}
+                    <label for="{{ registrationForm.plainPassword.vars.id }}">{{ 'password'|trans }}</label>
+                </div>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="form-group">
+                        <label class="form-label">{{ 'user_type'|trans }}</label>
+                        {% for choice in registrationForm.roleSelection %}
+                            <div class="form-check">
+                                {{ form_widget(choice, { 'attr': { 'class': 'form-check-input' } }) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <button type="submit" id="register" class="btn btn btn-primary mt-3">
+                    {{ isEdit ? 'save'|trans : 'register'|trans }}
+                </button>
+
+                <a href="{{ path('app_user_list') }}" class="btn btn-secondary btn mt-2">
+                    {{ 'go_back'|trans }}
+                </a>
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
+{% endblock %}
