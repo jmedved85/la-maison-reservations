@@ -1,12 +1,12 @@
 -- MySQL dump 10.13  Distrib 8.0.41, for Linux (x86_64)
 --
--- Host: 127.0.0.1    Database: sf-project-starter_dev
+-- Host: 127.0.0.1    Database: la-maison-reservations_dev
 -- ------------------------------------------------------
 -- Server version	8.0.39
 
 -- Create the test database
-CREATE DATABASE IF NOT EXISTS `sf-project-starter_test`;
-USE `sf-project-starter_test`;
+CREATE DATABASE IF NOT EXISTS `la-maison-reservations_test`;
+USE `la-maison-reservations_test`;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;

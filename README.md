@@ -1,4 +1,4 @@
-# SF Project Starter
+# La Maison Reservations
 
 This is a starter installation for full-stack project development with the latest Symfony (version 7). 
 Backend is run by Symfony and Doctrine components.
@@ -41,7 +41,7 @@ Ensure you have the following installed on your machine:
 2. Create a `.env.local` file and configure your database connection:
 
     ```dotenv
-    DATABASE_URL=mysql://root:pass1234@mysql-sf_project_starter:3306/sf-project-starter_dev
+    DATABASE_URL=mysql://root:pass1234@mysql-la_maison_reservations:3306/la-maison-reservations_dev
     APP_ENV=dev
     APP_DEBUG=true
     ```
@@ -63,7 +63,7 @@ Ensure you have the following installed on your machine:
     ```
 
     ```sql
-    INSERT INTO `sf-project-starter_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (1, 'admin@net.com', 'admin', '$2y$13$woWveCWpnhEiWPirdbvZu.nBRaKujD07uaFiJhkI/eEtQs5z9S36e', '["ROLE_ADMIN"]', 'Admin', 'User', 1);
+    INSERT INTO `la-maison-reservations_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (1, 'admin@net.com', 'admin', '$2y$13$woWveCWpnhEiWPirdbvZu.nBRaKujD07uaFiJhkI/eEtQs5z9S36e', '["ROLE_ADMIN"]', 'Admin', 'User', 1);
     ```
 
     ```bash
@@ -73,7 +73,7 @@ Ensure you have the following installed on your machine:
     ```
 
     ```sql
-    INSERT INTO `sf-project-starter_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (2, 'user@net.com', 'user', '$2y$13$Yfbvi3rzhcRV4Y3Adw4q3ekiq4R01p0n.tEIpwK7ls7bdVivmHu4e', '["ROLE_USER"]', 'Joe', 'Doe', 1);
+    INSERT INTO `la-maison-reservations_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (2, 'user@net.com', 'user', '$2y$13$Yfbvi3rzhcRV4Y3Adw4q3ekiq4R01p0n.tEIpwK7ls7bdVivmHu4e', '["ROLE_USER"]', 'Joe', 'Doe', 1);
     ```
 
 5. Start the Docker containers:

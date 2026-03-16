@@ -11,7 +11,7 @@ sudo apt install symfony-cli
 symfony check:requirements
 
 - traditional web app
-symfony new sf-project-starter --webapp
+symfony new la-maison-reservations --webapp
 
 - microservice, console application or API:
 symfony new my_project_directory
@@ -118,7 +118,7 @@ docker compose exec php bin/console security:hash-password
 -----------
 .env.local
 -----------
-DATABASE_URL=mysql://root:pass1234@mysql-sf_project_starter:3306/sf-project-starter_dev
+DATABASE_URL=mysql://root:pass1234@mysql-la_maison_reservations:3306/la-maison-reservations_dev
 APP_ENV=dev
 APP_DEBUG=true
 
@@ -129,7 +129,7 @@ DEFAULT ADMIN USER
 username: admin@net.com
 password: admin1234
 
-INSERT INTO `sf-project-starter_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (1, 'admin@net.com', 'admin', '$2y$13$woWveCWpnhEiWPirdbvZu.nBRaKujD07uaFiJhkI/eEtQs5z9S36e', '["ROLE_ADMIN"]', 'Admin', 'User', 1);
+INSERT INTO `la-maison-reservations_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (1, 'admin@net.com', 'admin', '$2y$13$woWveCWpnhEiWPirdbvZu.nBRaKujD07uaFiJhkI/eEtQs5z9S36e', '["ROLE_ADMIN"]', 'Admin', 'User', 1);
 
 
 ------------------
@@ -138,7 +138,7 @@ DEFAULT USER
 username: user@net.com
 password: user1234
 
-INSERT INTO `sf-project-starter_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (2, 'user@net.com', 'user', '$2y$13$Yfbvi3rzhcRV4Y3Adw4q3ekiq4R01p0n.tEIpwK7ls7bdVivmHu4e', '["ROLE_USER"]', 'Joe', 'Doe', 1);
+INSERT INTO `la-maison-reservations_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (2, 'user@net.com', 'user', '$2y$13$Yfbvi3rzhcRV4Y3Adw4q3ekiq4R01p0n.tEIpwK7ls7bdVivmHu4e', '["ROLE_USER"]', 'Joe', 'Doe', 1);
 
 
 ------
@@ -222,14 +222,14 @@ sudo chown user:user security.yaml
 MAILER
 ------
 ###> symfony/mailer ###
-MAILER_DSN=smtp://mailpit-sf_project_starter:1025
+MAILER_DSN=smtp://mailpit-la_maison_reservations:1025
 ###< symfony/mailer ###
 
 
 -----
 TESTS
 -----
-- execute query on the server which is included in '/database/sf-project-starter_test.sql'
+- execute query on the server which is included in '/database/la-maison-reservations_test.sql'
 
 ./vendor/bin/phpunit
 

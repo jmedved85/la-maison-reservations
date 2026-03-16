@@ -12,7 +12,7 @@
         <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
-        <env name="DATABASE_URL" value="mysql://root:pass1234@mysql-sf_project_starter:3306/sf-project-starter"/>
+        <env name="DATABASE_URL" value="mysql://root:pass1234@mysql-la_maison_reservations:3306/la-maison-reservations"/>
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />

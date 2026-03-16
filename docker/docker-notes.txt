@@ -14,10 +14,10 @@ docker compose ps
 # Access the application at http://localhost:8090
 
 # Check logs for the Nginx container (optional)
-docker logs nginx-sf_project_starter
+docker logs nginx-la_maison_reservations
 
 # Follow logs in real-time (optional)
-docker logs -f nginx-sf_project_starter
+docker logs -f nginx-la_maison_reservations
 
 # Stop and remove the containers, networks, and volumes
 docker compose down
@@ -25,12 +25,12 @@ docker compose down
 # Start the containers without build
 docker compose up -d
 
-- php-sf_project_starter container
-docker exec -it php-sf_project_starter /bin/bash
+- php-la_maison_reservations container
+docker exec -it php-la_maison_reservations /bin/bash
 cat /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-- nginx-sf_project_starter container
-docker exec -it nginx-sf_project_starter /bin/bash
+- nginx-la_maison_reservations container
+docker exec -it nginx-la_maison_reservations /bin/bash
 
 
 -----

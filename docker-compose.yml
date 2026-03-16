@@ -2,7 +2,7 @@ services:
   # database
   mysql:
     image: mysql:8.0.39-debian
-    container_name: mysql-sf_project_starter
+    container_name: mysql-la_maison_reservations
     environment:
       MYSQL_ROOT_PASSWORD: pass1234
       # MYSQL_USER: root
@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
-    container_name: php-sf_project_starter
+    container_name: php-la_maison_reservations
     environment:
       WEB_DOCUMENT_ROOT: /var/www/html/
       PHP_MEMORY_LIMIT: 512M
@@ -36,7 +36,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/nginx/Dockerfile
-    container_name: nginx-sf_project_starter
+    container_name: nginx-la_maison_reservations
     ports:
       - "8080:80"
     volumes:
@@ -48,7 +48,7 @@ services:
   # phpMyAdmin
   phpmyadmin:
     image: phpmyadmin:latest
-    container_name: phpmyadmin-sf_project_starter
+    container_name: phpmyadmin-la_maison_reservations
     restart: unless-stopped
     ports:
       - "8090:80"
@@ -68,7 +68,7 @@ services:
   # mailpit - mail testing service
   # mailpit:
   #   image: axllent/mailpit
-  #   container_name: mailpit-sf_project_starter
+  #   container_name: mailpit-la_maison_reservations
   #   restart: unless-stopped
   #   volumes:
   #     - ./data:/data

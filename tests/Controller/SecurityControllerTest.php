@@ -19,7 +19,7 @@ class SecurityControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/login');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Sf Project Starter');
+        $this->assertSelectorTextContains('h1', 'La Maison Reservations');
         $this->assertSelectorExists('form#login-form');
     }
 
