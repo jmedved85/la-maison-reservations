@@ -59,15 +59,5 @@
 
         {% include('_footer.html.twig') %}
 
-        {# Cookie Consent Banner #}
-        {% include('_cookie_consent.html.twig') %}
-
-        <script type="module">
-            import { initCookieConsent } from 'cookie_consent';
-
-            document.addEventListener('DOMContentLoaded', () => {
-                initCookieConsent();
-            });
-        </script>
     </body>
 </html>
