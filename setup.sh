@@ -15,15 +15,10 @@ echo "Step 1: Checking .env.local file..."
 if [ ! -f .env.local ]; then
     echo "⚠️  .env.local doesn't exist! Creating example..."
     cat > .env.local << 'EOF'
-###> doctrine/doctrine-bundle ###
-# Set DATABASE_URL with your database name
+# Default environment variables for La Maison Reservations
 DATABASE_URL="mysql://root:pass1234@mysql:3306/la_maison_reservations_dev?serverVersion=8.0.39&charset=utf8mb4"
-###< doctrine/doctrine-bundle ###
-
-###> symfony/mailer ###
-# Mailer configuration (optional - mailpit)
-# MAILER_DSN=smtp://mailpit:1025
-###< symfony/mailer ###
+APP_ENV=dev
+APP_DEBUG=true
 EOF
     echo "✓ Created .env.local with default values"
     echo "  Please review and adjust DATABASE_URL if needed!"
@@ -33,26 +28,29 @@ else
     echo ""
 fi
 
-# 2. Composer install
-echo "Step 2: Composer install..."
+# 2. Docker compose up --build
+echo "Step 2: Starting Docker containers..."
+docker compose up --build -d
+echo "✓ Docker containers started"
+echo ""
+
+# 3. Composer install
+echo "Step 3: Installing Composer dependencies..."
 if [ ! -d "vendor" ]; then
-    composer install
+    docker compose exec php composer update
     echo "✓ Composer dependencies installed"
 else
     echo "✓ Vendor folder already exists (skipping)"
 fi
 echo ""
 
-# 3. Docker compose up --build
-echo "Step 3: Starting Docker containers..."
-docker compose up --build -d
-echo "✓ Docker containers started"
-echo ""
-
 # Wait for MySQL to be ready
 echo "Step 4: Waiting for MySQL to be ready..."
-sleep 10
-echo "✓ MySQL should be ready"
+until docker compose exec mysql mysqladmin ping -h "localhost" -u root -ppass1234 --silent; do
+    echo "Waiting for MySQL..."
+    sleep 2
+done
+echo "✓ MySQL is ready"
 echo ""
 
 # 4. Database creation
@@ -94,4 +92,5 @@ echo "  ./migrations-migrate.sh    - Run migrations"
 echo "  ./asset-map-compile.sh     - Compile assets"
 echo "  ./test.sh                  - Run tests"
 echo "  ./clear-cache.sh           - Clear cache"
+echo "  ./qa.sh                    - Run code quality checks"
 echo ""
