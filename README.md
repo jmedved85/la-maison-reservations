@@ -1,107 +1,217 @@
 # La Maison Reservations
 
-This is a starter installation for full-stack project development with the latest Symfony (version 7). 
-Backend is run by Symfony and Doctrine components.
-For frontend it uses Twig and Bootstrap and some custom CSS and JavaScript and is set also for optional use of Stimulus/Turbo for better and one-page performance.
+A restaurant reservation system for "La Maison" restaurant built with Symfony 7, featuring both a public reservation page and an admin dashboard for managing reservations.
 
-This open-source project is intended for use in the development of my full-stack projects and is actively maintained and improved. It uses default Symfony components as well as some recommended by Symfony, and I will follow Symfony's recommendations as much as possible in the future.
+## Overview
+
+This application allows restaurant guests to make reservations online and provides restaurant staff with tools to manage bookings efficiently. The system supports both regular dining and private dining reservations with different capacity rules and availability.
 
 ## Features
 
-- User administration
-- Display flash messages for actions
-- Responsive design with Bootstrap
+- **Public Reservation System**: Guest-facing form for making reservations
+- **Admin Dashboard**: Manage and view all reservations with filtering options
+- **Dual Dining Modes**: Regular dining (1-20 guests) and Private dining (6-12 guests)
+- **Smart Capacity Management**: Automatic slot availability based on current bookings
+- **Reference Code System**: Unique codes (LM-XXXXX) for each reservation
+- **Status Tracking**: Pending, Confirmed, Cancelled, Completed states
+- **Responsive Design**: Built with Bootstrap and modern CSS
 
 ## Requirements
 
-- PHP 8.2 or higher
-- Composer
-- Symfony CLI
-- MySQL
-- Docker and Docker Compose
+- Docker 20.10+
+- Docker Compose 2.0+
+- (Optional) PHP 8.3+ and Composer if running outside Docker
 
 ## Prerequisites
 
-Ensure you have the following installed on your machine:
+Make sure you have Docker and Docker Compose installed:
 
-- Docker
-- Docker Compose
-- Composer
+```bash
+docker --version   # Should be 20.10+
+docker compose version  # Should be 2.0+
+```
 
-## Docker Installation
+## Quick Start
 
-- Check `docker/docker-notes.txt` file for more info
+The easiest way to get started is to use the setup script:
 
-1. Build and start the containers:
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+This script will:
+1. Create `.env.local` with default configuration
+2. Start Docker containers (PHP 8.4, MySQL 8.0, phpMyAdmin)
+3. Install Composer dependencies
+4. Create the database
+5. Run migrations
+6. Load fixtures (seed time slots and table configuration)
+7. Compile assets
+8. Clear cache
+
+After setup completes, the application will be available at:
+- **Web Application**: http://localhost:8080
+- **phpMyAdmin**: http://localhost:8090 (root / pass1234)
+
+## Manual Setup (Alternative)
+
+If you prefer to run commands manually instead of using the setup script:
+
+1. **Create environment file:**
+
+    ```bash
+    cp .env .env.local
+    # Edit .env.local and set DATABASE_URL
+    ```
+
+2. **Start Docker containers:**
 
     ```bash
     docker compose up -d --build
     ```
 
-2. Create a `.env.local` file and configure your database connection:
-
-    ```dotenv
-    DATABASE_URL=mysql://root:pass1234@mysql-la_maison_reservations:3306/la-maison-reservations_dev
-    APP_ENV=dev
-    APP_DEBUG=true
-    ```
-
-3. Create the database and run migrations:
+3. **Install dependencies:**
 
     ```bash
-    docker compose exec php php bin/console doctrine:database:create
-    docker compose exec php php bin/console doctrine:migrations:migrate
+    docker compose exec php composer install
     ```
 
-4. Insert dev users:
-    These are just example credentials and passwords are hashed using `bin/console security:hash-password` command.
+4. **Create database and run migrations:**
 
     ```bash
-    DEFAULT ADMIN USER
-    username: admin@net.com
-    password: admin1234
+    docker compose exec php bin/console doctrine:database:create
+    docker compose exec php bin/console doctrine:migrations:migrate
     ```
 
-    ```sql
-    INSERT INTO `la-maison-reservations_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (1, 'admin@net.com', 'admin', '$2y$13$woWveCWpnhEiWPirdbvZu.nBRaKujD07uaFiJhkI/eEtQs5z9S36e', '["ROLE_ADMIN"]', 'Admin', 'User', 1);
-    ```
+5. **Load initial data (fixtures):**
 
     ```bash
-    DEFAULT USER
-    username: user@net.com
-    password: user1234
+    docker compose exec php bin/console doctrine:fixtures:load
     ```
 
-    ```sql
-    INSERT INTO `la-maison-reservations_dev`.`user` (`id`, `email`, `user_name`, `password`, `roles`, `first_name`, `last_name`, `active`) VALUES (2, 'user@net.com', 'user', '$2y$13$Yfbvi3rzhcRV4Y3Adw4q3ekiq4R01p0n.tEIpwK7ls7bdVivmHu4e', '["ROLE_USER"]', 'Joe', 'Doe', 1);
-    ```
-
-5. Start the Docker containers:
+6. **Compile assets:**
 
     ```bash
-    sh up.sh
+    docker compose exec php bin/console asset-map:compile
     ```
 
-6. Run:
+## Restaurant Configuration
 
-    ```bash
-    composer install
-    sh asset-map-compile.sh
-    ```
+The restaurant's operating rules are configured in `config/packages/restaurant.yaml`:
 
-7. Open your browser and navigate to `http://localhost:8090` or `http://localhost:8090/login`.
+### Key Settings
+
+- **Operating Hours**: 12:00 - 22:00
+- **Last Reservation**: 21:00 (kitchen closes 1 hour before closing)
+- **Time Slot Interval**: 30 minutes
+- **Booking Window**: Up to 30 days in advance
+
+### Regular Dining
+- **Capacity**: 20 guests per time slot
+- **Party Size**: 1-10 guests
+- **Days**: Monday to Sunday
+- **Hours**: 12:00 - 21:00
+
+### Private Dining
+- **Capacity**: 1 reservation per time slot
+- **Party Size**: 6-12 guests
+- **Days**: Friday and Saturday only
+- **Hours**: 18:00 - 21:00
+
+
+### Initial Data Seeding
+
+Time slots and table configuration are **stored in the database** and automatically seeded during setup:
+
+**Time Slots:**
+- 19 regular dining slots (12:00 - 21:00, 30-minute intervals)
+- 7 private dining slots (18:00 - 21:00, 30-minute intervals)
+
+**Restaurant Tables:**
+- 8 regular dining tables (total capacity: 30 seats)
+- 1 private dining table (capacity: 12 seats)
+
+This data is loaded via Doctrine Fixtures (see `src/DataFixtures/`) and can be customized by:
+1. Modifying fixture class
+2. Running: `docker compose exec php bin/console doctrine:fixtures:load`
+
+The application also uses dynamic slot generation from `config/packages/restaurant.yaml` as a fallback.
+
+## Available Commands
+
+Convenience scripts are provided in the project root:
+
+```bash
+./setup.sh              # Initial project setup
+./up.sh                 # Start Docker containers
+./down.sh               # Stop Docker containers
+./test.sh               # Run PHPUnit tests
+./clear-cache.sh        # Clear Symfony cache
+./migrations-migrate.sh # Run database migrations
+./asset-map-compile.sh  # Compile frontend assets
+./qa.sh                 # Run code quality checks (PHPStan, PHP-CS-Fixer)
+```
 
 ## Running Tests
 
-To run the tests, use the following command:
+Run the PHPUnit test suite:
 
-    ```bash
-    ./vendor/bin/phpunit
-    ```
+```bash
+./test.sh
+# Or directly:
+docker compose exec php bin/phpunit
+```
+
+Tests cover:
+- Reservation validation rules
+- Capacity checking logic
+- Private dining availability
+- Date and time slot validation
+- TimeSlot and RestaurantTable fixtures
+
+## Accessing the Application
+
+### Public Reservation Page
+Visit: http://localhost:8080
+
+Features:
+- Make a reservation
+- Select date and time
+- Choose regular or private dining (if applicable)
+- Receive unique reference code
+
+### Admin Dashboard
+Visit: http://localhost:8080/admin
+
+Features:
+- View all reservations
+- Filter by date and status
+- See total expected guests
+- Identify fully-booked slots
+- Update reservation status
+
+(Note: Authentication is not implemented per specification)
+
+### Database Management (phpMyAdmin)
+Visit: http://localhost:8090
+
+Credentials: `root` / `pass1234`
+
+You can inspect:
+- `reservation` table - All reservations
+- `time_slot` table - Seeded time slots (26 records)
+- `restaurant_table` table - Seeded tables (9 records)
+- `user` table - Admin users (if any)
 
 ## Notes
 
-For more instructions check additional notes in `notes.txt` text file.
+- **Time slots** and **table configuration** are seeded in the database during setup
+- **Private dining** is only available Friday/Saturday 18:00-21:00
+- **Regular dining** capacity is 20 guests per slot (not 20 reservations)
+- **Private dining** capacity is 1 reservation per slot (6-12 guests)
+- **Reference codes** are automatically generated in format `LM-XXXXX`
+- **Cancelled reservations** don't count toward capacity
 
 ## License
 
@@ -109,6 +219,7 @@ This project is licensed under the MIT License.
 
 ## Acknowledgements
 
-- [Symfony](https://symfony.com/)
-- [Bootstrap](https://getbootstrap.com/)
-- [Doctrine](https://www.doctrine-project.org/)
+- [Symfony](https://symfony.com/) - PHP framework
+- [Doctrine](https://www.doctrine-project.org/) - ORM
+- [Bootstrap](https://getbootstrap.com/) - CSS framework
+- [Docker](https://www.docker.com/) - Containerization
