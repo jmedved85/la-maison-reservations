@@ -2,4 +2,4 @@
 
 # chmod +x phpstan.sh
 
-vendor/bin/phpstan analyze --memory-limit=1G
+docker compose exec php ./vendor/bin/phpstan analyze --memory-limit=1G
