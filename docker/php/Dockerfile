@@ -70,6 +70,9 @@ RUN mkdir -p /var/www/html/public/uploads/documents && \
     chown -R www-data:www-data /var/www/html/public/uploads/documents && \
     chmod -R 777 /var/www/html/public/uploads/documents
 
+# Configure git to trust the working directory
+RUN git config --global --add safe.directory /var/www/html
+
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
