@@ -224,7 +224,7 @@ class ReservationRepository extends ServiceEntityRepository
     public function getTotalGuestsForSlot(
         \DateTimeInterface $date,
         string $timeSlot,
-        ReservationType $reservationType
+        ReservationType $reservationType,
     ): int {
         $time = \DateTimeImmutable::createFromFormat('H:i', $timeSlot);
 
@@ -251,7 +251,7 @@ class ReservationRepository extends ServiceEntityRepository
     public function countActiveReservationsForSlot(
         \DateTimeInterface $date,
         string $timeSlot,
-        ReservationType $reservationType
+        ReservationType $reservationType,
     ): int {
         $time = \DateTimeImmutable::createFromFormat('H:i', $timeSlot);
 
