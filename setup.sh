@@ -65,14 +65,20 @@ docker compose exec php bin/console doctrine:migrations:migrate --no-interaction
 echo "✓ Migrations executed"
 echo ""
 
-# 6. Asset compile
-echo "Step 7: Compiling assets..."
+# 6. Load fixtures (seed initial data)
+echo "Step 7: Loading initial data (time slots, tables)..."
+docker compose exec php bin/console doctrine:fixtures:load --no-interaction
+echo "✓ Initial data loaded"
+echo ""
+
+# 7. Asset compile
+echo "Step 8: Compiling assets..."
 docker compose exec php bin/console asset-map:compile
 echo "✓ Assets compiled"
 echo ""
 
-# 7. Clear cache (optional but recommended)
-echo "Step 8: Clearing cache..."
+# 8. Clear cache (optional but recommended)
+echo "Step 9: Clearing cache..."
 docker compose exec php bin/console cache:clear
 echo "✓ Cache cleared"
 echo ""

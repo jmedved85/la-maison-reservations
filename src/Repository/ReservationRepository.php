@@ -216,4 +216,59 @@ class ReservationRepository extends ServiceEntityRepository
         $this->getEntityManager()->remove($reservation);
         $this->getEntityManager()->flush();
     }
+
+    /**
+     * Calculate total number of guests for a specific date and time slot (using string time).
+     * Excludes cancelled reservations.
+     */
+    public function getTotalGuestsForSlot(
+        \DateTimeInterface $date,
+        string $timeSlot,
+        ReservationType $reservationType
+    ): int {
+        $time = \DateTimeImmutable::createFromFormat('H:i', $timeSlot);
+
+        $result = $this->createQueryBuilder('r')
+            ->select('SUM(r.partySize)')
+            ->andWhere('r.reservationDate = :date')
+            ->andWhere('r.timeSlot = :timeSlot')
+            ->andWhere('r.reservationType = :type')
+            ->andWhere('r.status != :cancelled')
+            ->setParameter('date', $date)
+            ->setParameter('timeSlot', $time)
+            ->setParameter('type', $reservationType)
+            ->setParameter('cancelled', ReservationStatus::Cancelled)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        return (int) ($result ?? 0);
+    }
+
+    /**
+     * Count active reservations (non-cancelled) for a specific slot.
+     */
+    public function countActiveReservationsForSlot(
+        \DateTimeInterface $date,
+        string $timeSlot,
+        ReservationType $reservationType
+    ): int {
+        $time = \DateTimeImmutable::createFromFormat('H:i', $timeSlot);
+
+        $result = $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->andWhere('r.reservationDate = :date')
+            ->andWhere('r.timeSlot = :timeSlot')
+            ->andWhere('r.reservationType = :type')
+            ->andWhere('r.status != :cancelled')
+            ->setParameter('date', $date)
+            ->setParameter('timeSlot', $time)
+            ->setParameter('type', $reservationType)
+            ->setParameter('cancelled', ReservationStatus::Cancelled)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        return (int) ($result ?? 0);
+    }
 }

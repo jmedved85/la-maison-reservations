@@ -1,0 +1,30 @@
+parameters:
+    restaurant:
+        # Restaurant operating hours
+        opening_time: '12:00'
+        closing_time: '22:00'
+        
+        # Last reservation slot (kitchen closes 1 hour before closing)
+        last_reservation_time: '21:00'
+        
+        # Time slot interval in minutes
+        slot_interval_minutes: 30
+        
+        # Maximum days in advance for reservations
+        max_booking_days: 30
+        
+        # Regular dining capacity and rules
+        regular_dining:
+            max_guests_per_slot: 20
+            min_party_size: 1
+            max_party_size: 10
+            available_days: [1, 2, 3, 4, 5, 6, 7] # Monday to Sunday (1-7)
+        
+        # Private dining capacity and rules
+        private_dining:
+            max_reservations_per_slot: 1
+            min_party_size: 6
+            max_party_size: 12
+            available_days: [5, 6] # Friday and Saturday only
+            start_time: '18:00'
+            end_time: '22:00'
