@@ -98,6 +98,7 @@
         }
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^4.3",
         "php-cs-fixer/shim": "^3.69",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^1.12",
