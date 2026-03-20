@@ -1,6 +1,9 @@
-/* Public page JavaScript entry point */
+/* Admin page JavaScript entry point */
 
-import './styles/app.css';
+import './styles/app_admin.css';
+import './confirmation-modal.js';
+import './login.js';
+import './register.js';
 
 // Tooltip initialization
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')

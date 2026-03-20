@@ -1,8 +1,8 @@
 {% block header %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand nav-link-text-color {% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}"
-                href="{{ path('app_home') }}"
+            <a class="navbar-brand nav-link-text-color {% if app.request.attributes.get('_route') == 'app_admin' %}active{% endif %}"
+                href="{{ path('app_admin') }}"
             >
                 {{ 'home'|trans }}
             </a>
@@ -22,8 +22,8 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link nav-link-text-color {% if app.request.attributes.get('_route') == 'app_admin' %}active{% endif %}"
-                            href="{{ path('app_admin') }}">
-                            {{ 'admin_dashboard'|trans }}
+                            href="#">
+                            Link
                         </a>
                     </li>
 

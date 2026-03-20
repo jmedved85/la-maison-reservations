@@ -1,24 +1,154 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'home'|trans }}{% endblock %}
+{% block title %}{{ 'app_title_expanded'|trans }}{% endblock %}
 
 {% block content %}
-    <div class="col-md-12">
-        <div class="d-flex justify-content-between align-items-center mx-3">
-            <h1 class="display-6">
-                <span class="d-none d-lg-inline">{{ 'welcome_home'|trans }}</span>
-            </h1>
-            <img src="{{ asset('images/logo.png') }}" alt="logo" class="img-fluid logo-s">
+    {# Hero Section #}
+    <section class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-3 mb-3 fade-in">{{ 'welcome_home'|trans }}</h1>
+            <p class="lead fade-in">{{ 'welcome_home_message'|trans }}</p>
         </div>
+    </section>
 
-        <hr>
+    {# Main Reservation Section & Form #}
+    <section id="reservation" class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="reservation-section fade-in">
+                    <h2 class="text-center mb-4">
+                        <i class="bi bi-calendar-check text-secondary-custom me-2"></i>
+                        {{ 'make_a_reservation'|trans }}
+                    </h2>
+                    
+                    {# Placeholder for Reservation Form #}
+                    <div class="alert alert-info text-center" role="alert">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Reservation Form Coming Soon</strong>
+                        <p class="mb-0 mt-2">This is where the reservation form will be displayed.</p>
+                    </div>
 
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-12">
-                    <p class="lead">{{ 'home_page_description'|trans }}</p>
+                    {# Form will be implemented here later #}
+                    <div class="text-center mt-4">
+                        <p class="text-muted">
+                            <i class="bi bi-clock me-1"></i> 
+                            {{ 'operating_hours_note'|trans }}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    {# Information Section #}
+    <section class="container mb-5">
+        <div class="row">
+            {# Regular Dining #}
+            <div class="col-md-6 mb-4">
+                <div class="info-card h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="icon-feature bi bi-people me-3"></i>
+                        <h3 class="mb-0">{{ 'regular_dining'|trans }}</h3>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i> Party size: 1-20 guests</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i> Available: Monday - Sunday</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i> Time slots: 12:00 - 21:00</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i> 30-minute intervals</li>
+                    </ul>
+                </div>
+            </div>
+
+            {# Private Dining #}
+            <div class="col-md-6 mb-4">
+                <div class="info-card h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="icon-feature bi bi-gem me-3"></i>
+                        <h3 class="mb-0">{{ 'private_dining'|trans }}</h3>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i> Party size: 6-12 guests</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i> Available: Friday & Saturday only</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i> Time slots: 18:00 - 21:00</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i> Exclusive private room</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Features Section #}
+    <section class="bg-light-custom py-5 mb-5">
+        <div class="container">
+            <h2 class="text-center mb-5">{{ 'why_choose_la_maison'|trans }}</h2>
+            <div class="row text-center">
+                <div class="col-md-3 mb-4">
+                    <i class="icon-feature bi bi-award"></i>
+                    <h4>{{ 'premium_quality'|trans }}</h4>
+                    <p class="text-muted">{{ 'premium_quality_description'|trans }}</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <i class="icon-feature bi bi-clock-history"></i>
+                    <h4>{{ 'flexible_hours'|trans }}</h4>
+                    <p class="text-muted">{{ 'flexible_hours_description'|trans }}</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <i class="icon-feature bi bi-calendar-check"></i>
+                    <h4>{{ 'easy_booking'|trans }}</h4>
+                    <p class="text-muted">{{ 'easy_booking_description'|trans }}</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <i class="icon-feature bi bi-chat-heart"></i>
+                    <h4>{{ 'special_requests'|trans }}</h4>
+                    <p class="text-muted">{{ 'special_requests_description'|trans }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Operating Hours Section #}
+    <section class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="operating-hours">
+                    <h4 class="text-center mb-4">
+                        <i class="bi bi-clock me-2"></i>
+                        {{ 'operating_hours'|trans }}
+                    </h4>
+                    <ul class="hours-list">
+                        <li>
+                            <span class="day">{{ 'monday_sunday'|trans }}</span>
+                            <span class="time">12:00 - 22:00</span>
+                        </li>
+                        <li>
+                            <span class="day">{{ 'kitchen_closes'|trans }}</span>
+                            <span class="time">21:00 (Last Orders)</span>
+                        </li>
+                        <li>
+                            <span class="day">{{ 'last_reservation'|trans }}</span>
+                            <span class="time">21:00</span>
+                        </li>
+                    </ul>
+                    <div class="alert alert-warning mt-3 mb-0" role="alert">
+                        <small>
+                            <i class="bi bi-info-circle me-1"></i>
+                            <strong>{{ 'note'|trans }}:</strong> {{ 'private_dining_note'|trans }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Call to Action #}
+    <section class="bg-light-custom py-5 text-center">
+        <div class="container">
+            <h2 class="mb-3">{{ 'ready_to_experience_fine_dining'|trans }}</h2>
+            <p class="lead mb-4">{{ 'book_your_table_now'|trans }}</p>
+            <a href="#reservation" class="btn btn-primary btn-lg">
+                <i class="bi bi-calendar-plus me-2"></i>
+                {{ 'make_a_reservation'|trans }}
+            </a>
+        </div>
+    </section>
 {% endblock %}

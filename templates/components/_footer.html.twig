@@ -1,0 +1,33 @@
+{% block footer %}
+    <footer class="footer mt-auto py-3">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>La Maison</h5>
+                    <p class="mb-2">Fine dining experience in the heart of the city.</p>
+                    <p class="mb-0">
+                        <i class="bi bi-geo-alt me-2"></i> 123 Main Street<br>
+                        <i class="bi bi-phone me-2"></i> +1 (555) 123-4567<br>
+                        <i class="bi bi-envelope me-2"></i> info@lamaison.com
+                    </p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
+                        <li><a href="{{ path('app_home') }}#reservation">Make a Reservation</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Opening Hours</h5>
+                    <p class="mb-1">Monday - Sunday</p>
+                    <p class="mb-0">12:00 - 22:00</p>
+                    <p class="small mt-2 text-white-50">Last reservation at 21:00</p>
+                </div>
+            </div>
+            <div class="footer-bottom text-center">
+                <p class="mb-0">&copy; {{ "now"|date("Y") }} La Maison. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
