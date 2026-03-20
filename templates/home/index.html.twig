@@ -20,13 +20,62 @@
                         <i class="bi bi-calendar-check text-secondary-custom me-2"></i>
                         {{ 'make_a_reservation'|trans }}
                     </h2>
-                    
-                    {# Placeholder for Reservation Form #}
-                    <div class="alert alert-info text-center" role="alert">
-                        <i class="bi bi-info-circle me-2"></i>
-                        <strong>Reservation Form Coming Soon</strong>
-                        <p class="mb-0 mt-2">This is where the reservation form will be displayed.</p>
-                    </div>
+
+                    {# Reservation Form #}
+                    {{ form_start(reservationForm, {'attr': {'class': 'reservation-form'}}) }}
+
+                        <div class="row">
+                            {# Personal Information Section #}
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(reservationForm.fullName) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(reservationForm.email) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(reservationForm.phoneNumber) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(reservationForm.reservationType) }}
+                            </div>
+                        </div>
+
+                        {# Reservation Details Section #}
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                {{ form_row(reservationForm.reservationDate) }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form_row(reservationForm.timeSlot) }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form_row(reservationForm.partySize) }}
+                            </div>
+                        </div>
+
+                        {# Special Requests Section #}
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                {{ form_row(reservationForm.specialRequests) }}
+                            </div>
+                        </div>
+
+                        {# Submit Button #}
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                    <i class="bi bi-calendar-check me-2"></i>
+                                    <span>{{ 'confirm_reservation'|trans }}</span>
+                                    <span class="spinner-border spinner-border-sm text-light ms-2 d-none" role="status" aria-hidden="true"></span>
+                                    <span class="sending-text d-none">{{ 'confirming'|trans }}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    {{ form_end(reservationForm) }}
 
                     {# Form will be implemented here later #}
                     <div class="text-center mt-4">
@@ -151,4 +200,6 @@
             </a>
         </div>
     </section>
+
+    {% include 'components/_confirmation_modal.html.twig' %}
 {% endblock %}

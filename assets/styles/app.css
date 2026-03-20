@@ -1,8 +1,9 @@
+/* CSS Variables */
 :root {
     --primary-color: #2c3e50;
     --secondary-color: #c9a961;
     --accent-color: #8b6f47;
-    --text-dark: #2c3e50;
+    --text-dark: #122232;
     --text-light: #6c757d;
     --bg-light: #f8f9fa;
     --bg-white: #ffffff;
@@ -75,37 +76,37 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
 }
 
-/* Reservation Form Section */
+/* Reservation Section */
 .reservation-section {
-    background: var(--bg-white);
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,.07);
-    padding: 2.5rem;
-    margin-bottom: 3rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    margin-bottom: 30px;
 }
 
-.reservation-section h2 {
-    color: var(--primary-color);
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
+/* Form Styles */
+.reservation-form {
+    margin-top: 30px;
 }
 
-/* Form Styling */
-.form-label {
+.reservation-form .form-label {
     font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+    margin-bottom: 8px;
 }
 
-.form-control, .form-select {
-    border: 2px solid var(--border-color);
-    border-radius: 6px;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
+.reservation-form .form-control,
+.reservation-form .form-select {
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 16px;
+    transition: all 0.3s ease;
 }
 
-.form-control:focus, .form-select:focus {
+.reservation-form .form-control:focus,
+.reservation-form .form-select:focus {
     border-color: var(--secondary-color);
     box-shadow: 0 0 0 0.2rem rgba(201, 169, 97, 0.25);
 }
@@ -286,5 +287,75 @@ h1, h2, h3, h4, h5, h6 {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* Confirmation Page Styles */
+.success-icon i {
+    animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.reference-code-display {
+    border: 3px dashed var(--secondary-color);
+}
+
+.info-item {
+    margin-bottom: 15px;
+}
+
+.info-item strong {
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.info-item p {
+    color: var(--text-muted);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 50px 0;
+    }
+
+    .reservation-section {
+        padding: 25px;
+    }
+
+    .info-card {
+        margin-bottom: 20px;
+    }
+
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+}
+
+/* Print Styles for Confirmation Page */
+@media print {
+    .navbar,
+    footer,
+    .btn {
+        display: none !important;
+    }
+
+    .card {
+        border: 2px solid var(--primary-color) !important;
+        box-shadow: none !important;
+    }
+
+    .reference-code-display {
+        border: 3px solid var(--secondary-color) !important;
     }
 }
