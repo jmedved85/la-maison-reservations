@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Reservation;
 use App\Entity\ReservationType as ReservationTypeEnum;
+use App\Form\DataTransformer\TimeSlotTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -12,7 +13,6 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -65,12 +65,8 @@ class ReservationFormType extends AbstractType
                 'label' => 'Reservation Date',
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable',
-                // 'html5' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    // 'class' => 'form-control flatpickr-date',
-                    // 'placeholder' => 'Select date',
-                    // 'readonly' => true,
                     'min' => (new \DateTimeImmutable('+1 day'))->format('Y-m-d'),
                     'max' => (new \DateTimeImmutable('+30 days'))->format('Y-m-d'),
                     'style' => 'cursor: pointer;',
@@ -88,19 +84,16 @@ class ReservationFormType extends AbstractType
                     ),
                 ],
             ])
-            ->add('timeSlot', TimeType::class, [
+            ->add('timeSlot', TextType::class, [
                 'label' => 'Time Slot',
-                'widget' => 'single_text',
-                'input' => 'datetime_immutable',
-                // 'html5' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    // 'class' => 'form-control flatpickr-time',
-                    // 'placeholder' => 'Select time',
-                    // 'readonly' => true,
+                    'data-timeslot-select' => true,
+                    'readonly' => true,
+                    // 'placeholder' => 'Please select type, date, and party size first',
                 ],
                 'required' => true,
-                'help' => 'Available time slots will be shown based on your selected date and reservation type',
+                'help' => 'Available slots will appear after selecting reservation type, date, and party size',
             ])
             ->add('partySize', IntegerType::class, [
                 'label' => 'Party Size',
@@ -124,6 +117,11 @@ class ReservationFormType extends AbstractType
                 ],
                 'help' => 'Maximum 500 characters',
             ])
+        ;
+
+        // Transformer to convert between string (H:i) and DateTimeInterface
+        $builder->get('timeSlot')
+            ->addModelTransformer(new TimeSlotTransformer())
         ;
     }
 

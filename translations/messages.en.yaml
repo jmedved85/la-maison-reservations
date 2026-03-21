@@ -146,7 +146,7 @@ why_choose_la_maison: "Why Choose La Maison?"
 
 +1 (555) 123-4567: +1 (555) 123-4567
 Any dietary restrictions, allergies, or special occasions? (Optional): Any dietary restrictions, allergies, or special occasions? (Optional)
-Available time slots will be shown based on your selected date and reservation type: Available time slots will be shown based on your selected date and reservation type
+Available slots will appear after selecting reservation type, date, and party size: Available slots will appear after selecting reservation type, date, and party size
 Email Address: Email Address
 Enter your full name: Enter your full name
 Full Name: Full Name
@@ -161,6 +161,7 @@ Regular Dining: Regular Dining
 Reservation Date: Reservation Date
 Reservation Type: Reservation Type
 Select date: Select date
+Select date and type first: Select date and type first
 Select time: Select time
 Select reservation type: Select reservation type
 Special Requests: Special Requests

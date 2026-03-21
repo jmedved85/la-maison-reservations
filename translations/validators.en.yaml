@@ -10,7 +10,10 @@ Phone number cannot be longer than {{ limit }} characters: Phone number cannot b
 Phone number is required: Phone number is required
 Phone number must be at least {{ limit }} characters: Phone number must be at least {{ limit }} characters
 Please provide a valid email address: Please provide a valid email address
+Please select a reservation date: Please select a reservation date
 Private Dining requires between 6 and 12 guests: Private Dining requires between 6 and 12 guests
 Reservation date is required: Reservation date is required
+Reservation date must be at least one day in the future: Reservation date must be at least one day in the future
+Reservations can only be made up to 30 days in advance: Reservations can only be made up to 30 days in advance
 Special requests cannot exceed {{ limit }} characters: Special requests cannot exceed {{ limit }} characters
 Time slot is required: Time slot is required
