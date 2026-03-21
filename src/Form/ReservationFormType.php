@@ -49,14 +49,31 @@ class ReservationFormType extends AbstractType
                 ],
                 'required' => true,
             ])
+            ->add('reservationType', EnumType::class, [
+                'class' => ReservationTypeEnum::class,
+                'label' => 'Reservation Type',
+                'choice_label' => fn (ReservationTypeEnum $type) => $type->getLabel(),
+                'attr' => [
+                    'class' => 'form-select',
+                    'style' => 'cursor: pointer;',
+                ],
+                'required' => true,
+                'placeholder' => 'Select reservation type',
+                'help' => 'Private dining is only available on Fridays and Saturdays',
+            ])
             ->add('reservationDate', DateType::class, [
                 'label' => 'Reservation Date',
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable',
+                // 'html5' => false,
                 'attr' => [
                     'class' => 'form-control',
+                    // 'class' => 'form-control flatpickr-date',
+                    // 'placeholder' => 'Select date',
+                    // 'readonly' => true,
                     'min' => (new \DateTimeImmutable('+1 day'))->format('Y-m-d'),
                     'max' => (new \DateTimeImmutable('+30 days'))->format('Y-m-d'),
+                    'style' => 'cursor: pointer;',
                 ],
                 'required' => true,
                 'constraints' => [
@@ -75,8 +92,12 @@ class ReservationFormType extends AbstractType
                 'label' => 'Time Slot',
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable',
+                // 'html5' => false,
                 'attr' => [
                     'class' => 'form-control',
+                    // 'class' => 'form-control flatpickr-time',
+                    // 'placeholder' => 'Select time',
+                    // 'readonly' => true,
                 ],
                 'required' => true,
                 'help' => 'Available time slots will be shown based on your selected date and reservation type',
@@ -91,17 +112,6 @@ class ReservationFormType extends AbstractType
                 ],
                 'required' => true,
                 'help' => 'Regular dining: 1-10 guests | Private dining: 6-12 guests',
-            ])
-            ->add('reservationType', EnumType::class, [
-                'class' => ReservationTypeEnum::class,
-                'label' => 'Reservation Type',
-                'choice_label' => fn (ReservationTypeEnum $type) => $type->getLabel(),
-                'attr' => [
-                    'class' => 'form-select',
-                ],
-                'required' => true,
-                'placeholder' => 'Select reservation type',
-                'help' => 'Private dining is only available on Fridays and Saturdays',
             ])
             ->add('specialRequests', TextareaType::class, [
                 'label' => 'Special Requests',

@@ -1,1 +1,16 @@
 unique_user_validation: "There is already an account with this email"
+
+Email is required: Email is required
+Full name is required: Full name is required
+Name cannot be longer than {{ limit }} characters: Name cannot be longer than {{ limit }} characters
+Name must be at least {{ limit }} characters: Name must be at least {{ limit }} characters
+Party size is required: Party size is required
+Party size must be between {{ min }} and {{ max }} guests: Party size must be between {{ min }} and {{ max }} guests
+Phone number cannot be longer than {{ limit }} characters: Phone number cannot be longer than {{ limit }} characters
+Phone number is required: Phone number is required
+Phone number must be at least {{ limit }} characters: Phone number must be at least {{ limit }} characters
+Please provide a valid email address: Please provide a valid email address
+Private Dining requires between 6 and 12 guests: Private Dining requires between 6 and 12 guests
+Reservation date is required: Reservation date is required
+Special requests cannot exceed {{ limit }} characters: Special requests cannot exceed {{ limit }} characters
+Time slot is required: Time slot is required

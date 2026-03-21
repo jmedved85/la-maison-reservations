@@ -110,9 +110,11 @@ class Reservation
         // Generate reference code in format LM-XXXXX (5 alphanumeric characters)
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $code = 'LM-';
-        for ($i = 0; $i < 5; ++$i) {
+
+        for ($i = 0; $i < 5; $i++) {
             $code .= $characters[random_int(0, strlen($characters) - 1)];
         }
+
         $this->referenceCode = $code;
     }
 
