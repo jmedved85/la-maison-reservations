@@ -111,7 +111,7 @@ class Reservation
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $code = 'LM-';
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $code .= $characters[random_int(0, strlen($characters) - 1)];
         }
 
