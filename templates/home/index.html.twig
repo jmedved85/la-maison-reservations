@@ -39,14 +39,14 @@
                                 {{ form_row(reservationForm.phoneNumber) }}
                             </div>
                             <div class="col-md-6 mb-3">
-                                {{ form_row(reservationForm.reservationType) }}
+                                {{ form_row(reservationForm.reservationDate) }}
                             </div>
                         </div>
 
                         {# Reservation Details Section #}
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                {{ form_row(reservationForm.reservationDate) }}
+                                {{ form_row(reservationForm.reservationType) }}
                             </div>
                             <div class="col-md-4 mb-3">
                                 {{ form_row(reservationForm.partySize) }}
@@ -100,10 +100,11 @@
                         <h3 class="mb-0">{{ 'regular_dining'|trans }}</h3>
                     </div>
                     <ul class="list-unstyled">
-                        <li><i class="bi bi-check-circle text-success me-2"></i> Party size: 1-20 guests</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i> Party size: 1-10 guests</li>
                         <li><i class="bi bi-check-circle text-success me-2"></i> Available: Monday - Sunday</li>
                         <li><i class="bi bi-check-circle text-success me-2"></i> Time slots: 12:00 - 21:00</li>
                         <li><i class="bi bi-check-circle text-success me-2"></i> 30-minute intervals</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i> Max 20 guests per time slot</li>
                     </ul>
                 </div>
             </div>

@@ -20,6 +20,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const partySizeInput = document.querySelector('#reservation_form_partySize');
     const timeSlotInput = document.querySelector('#reservation_form_timeSlot');
 
+    // Initially disable type selection until date is chosen
+    if (typeSelect) {
+        const privateDiningOption = typeSelect.querySelector('option[value="private_dining"]');
+        if (privateDiningOption) {
+            privateDiningOption.style.display = 'none';
+        }
+    }
+
     // Create a custom select element for time slots
     let timeSlotSelect = null;
     if (timeSlotInput) {
@@ -30,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
         timeSlotSelect = document.createElement('select');
         timeSlotSelect.className = 'form-select';
         timeSlotSelect.id = 'timeslot_select_custom';
-        // timeSlotSelect.innerHTML = '<option value="">Please select type, date, and party size first</option>';
+        timeSlotSelect.innerHTML = '<option value="">Select date, type, and party size first</option>';
         timeSlotSelect.disabled = true;
 
         // Insert select after the hidden input
@@ -45,12 +53,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Helper function to get missing fields message
     function getMissingFieldsMessage() {
         const missing = [];
-        if (!typeSelect?.value) missing.push('reservation type');
         if (!dateInput?.value) missing.push('date');
+        if (!typeSelect?.value) missing.push('reservation type');
         if (!partySizeInput?.value) missing.push('party size');
-        
+
         if (missing.length === 0) return null;
-        
+
         return `Please select ${missing.join(', ')} first`;
     }
 
@@ -119,12 +127,15 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.available) {
+                    // Show Private Dining option
+                    privateDiningOption.style.display = '';
                     privateDiningOption.disabled = false;
                     privateDiningOption.textContent = 'Private Dining';
                 } else {
+                    // Hide Private Dining option
+                    privateDiningOption.style.display = 'none';
                     privateDiningOption.disabled = true;
-                    privateDiningOption.textContent = 'Private Dining (Not available on this day)';
-                    
+
                     // If Private Dining is currently selected, deselect it
                     if (typeSelect.value === 'private_dining') {
                         typeSelect.value = '';
@@ -208,6 +219,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listeners
     if (typeSelect) {
         typeSelect.addEventListener('change', function() {
+            // Update party size constraints based on type
+            updatePartySizeConstraints();
+
             // Clear time slot when type changes
             if (timeSlotSelect) {
                 timeSlotSelect.value = '';
@@ -215,6 +229,27 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             loadAvailableTimeSlots();
         });
+    }
+
+    // Update party size min/max based on reservation type
+    function updatePartySizeConstraints() {
+        if (!partySizeInput || !typeSelect) return;
+
+        const type = typeSelect.value;
+
+        if (type === 'private_dining') {
+            partySizeInput.min = 6;
+            partySizeInput.max = 12;
+            partySizeInput.placeholder = '6-12 guests';
+        } else if (type === 'regular') {
+            partySizeInput.min = 1;
+            partySizeInput.max = 10;
+            partySizeInput.placeholder = '1-10 guests';
+        } else {
+            partySizeInput.min = 1;
+            partySizeInput.max = 12;
+            partySizeInput.placeholder = 'Number of guests';
+        }
     }
 
     if (partySizeInput) {

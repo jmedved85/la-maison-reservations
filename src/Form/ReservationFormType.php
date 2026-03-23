@@ -59,7 +59,7 @@ class ReservationFormType extends AbstractType
                 ],
                 'required' => true,
                 'placeholder' => 'Select reservation type',
-                'help' => 'Private dining is only available on Fridays and Saturdays',
+                'help' => 'Regular: 1-10 guests, all days | Private: 6-12 guests, Fridays & Saturdays only',
             ])
             ->add('reservationDate', DateType::class, [
                 'label' => 'Reservation Date',
@@ -90,10 +90,10 @@ class ReservationFormType extends AbstractType
                     'class' => 'form-control',
                     'data-timeslot-select' => true,
                     'readonly' => true,
-                    // 'placeholder' => 'Please select type, date, and party size first',
+                    'placeholder' => 'Select date, type, and party size first',
                 ],
                 'required' => true,
-                'help' => 'Available slots will appear after selecting reservation type, date, and party size',
+                'help' => 'Available slots will appear based on your selections above',
             ])
             ->add('partySize', IntegerType::class, [
                 'label' => 'Party Size',
@@ -104,7 +104,7 @@ class ReservationFormType extends AbstractType
                     'placeholder' => 'Number of guests',
                 ],
                 'required' => true,
-                'help' => 'Regular dining: 1-10 guests | Private dining: 6-12 guests',
+                'help' => 'Number of guests (constraints apply based on reservation type)',
             ])
             ->add('specialRequests', TextareaType::class, [
                 'label' => 'Special Requests',

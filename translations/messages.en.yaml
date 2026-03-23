@@ -146,22 +146,23 @@ why_choose_la_maison: "Why Choose La Maison?"
 
 +1 (555) 123-4567: +1 (555) 123-4567
 Any dietary restrictions, allergies, or special occasions? (Optional): Any dietary restrictions, allergies, or special occasions? (Optional)
-Available slots will appear after selecting reservation type, date, and party size: Available slots will appear after selecting reservation type, date, and party size
+Available slots will appear based on your selections above: Available slots will appear based on your selections above
 Email Address: Email Address
 Enter your full name: Enter your full name
 Full Name: Full Name
 Maximum 500 characters: Maximum 500 characters
 Number of guests: Number of guests
+Number of guests (constraints apply based on reservation type): Number of guests (constraints apply based on reservation type)
 Party Size: Party Size
 Phone Number: Phone Number
 Private Dining: Private Dining
 Private dining is only available on Fridays and Saturdays: Private dining is only available on Fridays and Saturdays
-"Regular dining: 1-10 guests | Private dining: 6-12 guests": "Regular dining: 1-10 guests | Private dining: 6-12 guests"
+"Regular: 1-10 guests, all days | Private: 6-12 guests, Fridays & Saturdays only": "Regular: 1-10 guests, all days | Private: 6-12 guests, Fridays & Saturdays only"
 Regular Dining: Regular Dining
 Reservation Date: Reservation Date
 Reservation Type: Reservation Type
 Select date: Select date
-Select date and type first: Select date and type first
+Select date, type, and party size first: Select date, type, and party size first
 Select time: Select time
 Select reservation type: Select reservation type
 Special Requests: Special Requests
