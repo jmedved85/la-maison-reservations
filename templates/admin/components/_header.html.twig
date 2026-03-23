@@ -20,13 +20,6 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-text-color {% if app.request.attributes.get('_route') == 'app_admin' %}active{% endif %}"
-                            href="#">
-                            Link
-                        </a>
-                    </li>
-
                     {# Commented out - authentication disabled per specification #}
                     {# {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">

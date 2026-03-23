@@ -14,10 +14,236 @@
 
         <hr>
 
-        <div class="container mt-5">
+        <div class="container-fluid mt-4">
+            {# Filters Section #}
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="bi bi-funnel me-2"></i>{{ 'filters'|trans }}
+                            </h5>
+                            <form method="get" action="{{ path('app_admin') }}" class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="filter_date" class="form-label">{{ 'date'|trans }}</label>
+                                    <input type="date" class="form-control" id="filter_date" name="date" value="{{ app.request.query.get('date', 'now'|date('Y-m-d')) }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="filter_status" class="form-label">{{ 'status'|trans }}</label>
+                                    <select class="form-select" id="filter_status" name="status">
+                                        <option value="">{{ 'all_statuses'|trans }}</option>
+                                        <option value="pending" {{ app.request.query.get('status') == 'pending' ? 'selected' : '' }}>{{ 'pending'|trans }}</option>
+                                        <option value="confirmed" {{ app.request.query.get('status') == 'confirmed' ? 'selected' : '' }}>{{ 'confirmed'|trans }}</option>
+                                        <option value="cancelled" {{ app.request.query.get('status') == 'cancelled' ? 'selected' : '' }}>{{ 'cancelled'|trans }}</option>
+                                        <option value="completed" {{ app.request.query.get('status') == 'completed' ? 'selected' : '' }}>{{ 'completed'|trans }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary me-2">
+                                        <i class="bi bi-search me-1"></i>{{ 'filter'|trans }}
+                                    </button>
+                                    <a href="{{ path('app_admin') }}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>{{ 'clear'|trans }}
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Statistics Cards #}
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title text-uppercase mb-1">{{ 'total_reservations'|trans }}</h6>
+                                    <h2 class="mb-0">{{ stats.totalReservations }}</h2>
+                                </div>
+                                <i class="bi bi-calendar-check" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-success shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title text-uppercase mb-1">{{ 'expected_guests'|trans }}</h6>
+                                    <h2 class="mb-0">{{ stats.expectedGuests }}</h2>
+                                </div>
+                                <i class="bi bi-people-fill" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title text-uppercase mb-1">{{ 'pending'|trans }}</h6>
+                                    <h2 class="mb-0">{{ stats.pendingCount }}</h2>
+                                </div>
+                                <i class="bi bi-clock-fill" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-danger shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title text-uppercase mb-1">{{ 'fully_booked_slots'|trans }}</h6>
+                                    <h2 class="mb-0">{{ stats.fullyBookedSlotsCount }}</h2>
+                                </div>
+                                <i class="bi bi-exclamation-triangle-fill" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Reservations Table #}
             <div class="row">
                 <div class="col-md-12">
-                    <p class="lead">This is your Dashboard page.</p>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-list-ul me-2"></i>{{ 'reservations_list'|trans }}
+                            </h5>
+                            <span class="badge bg-primary">{{ 'showing'|trans }}: {{ filterDate|date('l, F j, Y') }}</span>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>{{ 'reference_code'|trans }}</th>
+                                            <th>{{ 'guest_name'|trans }}</th>
+                                            <th>
+                                                <a href="#" class="text-decoration-none text-dark">
+                                                    {{ 'date'|trans }} <i class="bi bi-arrow-down"></i>
+                                                </a>
+                                            </th>
+                                            <th>{{ 'time'|trans }}</th>
+                                            <th>{{ 'party_size'|trans }}</th>
+                                            <th>{{ 'type'|trans }}</th>
+                                            <th>{{ 'status'|trans }}</th>
+                                            <th class="text-end">{{ 'actions'|trans }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if reservations is not empty %}
+                                            {% for reservation in reservations %}
+                                                {% set isFullyBooked = reservation.reservationDate|date('Y-m-d') ~ '|' ~ reservation.timeSlot|date('H:i') in fullyBookedSlots %}
+                                                <tr>
+                                                    <td>
+                                                        <code class="text-primary">{{ reservation.referenceCode }}</code>
+                                                    </td>
+                                                    <td>
+                                                        <i class="bi bi-person-circle me-1"></i>
+                                                        {{ reservation.fullName }}
+                                                    </td>
+                                                    <td>{{ reservation.reservationDate|date('M j, Y') }}</td>
+                                                    <td>
+                                                        {% if isFullyBooked %}
+                                                            <span class="badge bg-danger">
+                                                                <i class="bi bi-exclamation-circle me-1"></i>{{ reservation.timeSlot|date('H:i') }}
+                                                            </span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary">{{ reservation.timeSlot|date('H:i') }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td><span class="badge bg-secondary">{{ reservation.partySize }} {{ 'guests'|trans }}</span></td>
+                                                    <td>
+                                                        {% if reservation.reservationType.value == 'private_dining' %}
+                                                            <span class="badge bg-warning">{{ 'private'|trans }}</span>
+                                                        {% else %}
+                                                            <span class="badge bg-info">{{ 'regular'|trans }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if reservation.status.value == 'pending' %}
+                                                            <span class="badge bg-warning">{{ 'pending'|trans }}</span>
+                                                        {% elseif reservation.status.value == 'confirmed' %}
+                                                            <span class="badge bg-success">{{ 'confirmed'|trans }}</span>
+                                                        {% elseif reservation.status.value == 'cancelled' %}
+                                                            <span class="badge bg-danger">{{ 'cancelled'|trans }}</span>
+                                                        {% elseif reservation.status.value == 'completed' %}
+                                                            <span class="badge bg-secondary">{{ 'completed'|trans }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <a href="{{ path('app_admin_reservation_detail', {id: reservation.id}) }}" class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr id="empty-state">
+                                                <td colspan="8" class="text-center py-5">
+                                                    <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.3;"></i>
+                                                    <p class="text-muted mt-3">{{ 'no_reservations_found'|trans }}</p>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    {{ 'showing'|trans }} 
+                                    {{ (pagination.currentPage - 1) * pagination.itemsPerPage + 1 }}-{{ min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems) }} 
+                                    {{ 'of'|trans }} {{ pagination.totalItems }} {{ 'reservations'|trans }}
+                                </small>
+                                <nav aria-label="Reservations pagination">
+                                    <ul class="pagination pagination-sm mb-0">
+                                        <li class="page-item {{ pagination.currentPage == 1 ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ path('app_admin', {page: pagination.currentPage - 1, date: app.request.get('date'), status: app.request.get('status')}) }}" tabindex="{{ pagination.currentPage == 1 ? '-1' : '' }}">{{ 'previous'|trans }}</a>
+                                        </li>
+                                        {% for page in 1..pagination.totalPages %}
+                                            {% if page == 1 or page == pagination.totalPages or (page >= pagination.currentPage - 1 and page <= pagination.currentPage + 1) %}
+                                                <li class="page-item {{ page == pagination.currentPage ? 'active' : '' }}">
+                                                    <a class="page-link" href="{{ path('app_admin', {page: page, date: app.request.get('date'), status: app.request.get('status')}) }}">{{ page }}</a>
+                                                </li>
+                                            {% elseif page == pagination.currentPage - 2 or page == pagination.currentPage + 2 %}
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">...</span>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <li class="page-item {{ pagination.currentPage == pagination.totalPages ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ path('app_admin', {page: pagination.currentPage + 1, date: app.request.get('date'), status: app.request.get('status')}) }}">{{ 'next'|trans }}</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Legend #}
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="alert alert-info d-flex align-items-center" role="alert">
+                        <i class="bi bi-info-circle-fill me-3"></i>
+                        <div>
+                            <strong>{{ 'legend'|trans }}:</strong>
+                            <span class="badge bg-danger ms-2">
+                                <i class="bi bi-exclamation-circle me-1"></i>Time
+                            </span>
+                            = {{ 'fully_booked_time_slot'|trans }} (20/20 guests)
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

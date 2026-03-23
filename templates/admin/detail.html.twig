@@ -1,0 +1,186 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}{{ 'reservation_details'|trans }} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="container">
+            {# Flash Messages #}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                        <i class="bi bi-{{ label == 'success' ? 'check-circle' : 'exclamation-triangle' }}-fill me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {# Header #}
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <div class="bg-light d-flex justify-content-between align-items-center p-3 rounded shadow-sm">
+                        <div>
+                            <h1 class="h3 mb-1">
+                                <i class="bi bi-receipt me-2"></i>{{ 'reservation_details'|trans }}
+                            </h1>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-calendar-check me-1"></i>
+                                {{ 'reference_code'|trans }}:&nbsp;<code class="text-primary">{{ reservation.referenceCode }}</code>
+                            </p>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-calendar-plus me-1"></i>
+                                {{ 'created_at'|trans }}:&nbsp;<small class="text-muted">{{ reservation.createdAt|date('F j, Y \\a\\t H:i') }}</small>
+                            </p>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-calendar-check me-1"></i>
+                                {{ 'updated_at'|trans }}:&nbsp;<small class="text-muted">{{ reservation.updatedAt|date('F j, Y \\a\\t H:i') }}</small>
+                            </p>
+                        </div>
+                        <a href="{{ path('app_admin') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>{{ 'go_back'|trans }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                {# Guest Information #}
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-person-circle me-2"></i>{{ 'guest_information'|trans }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-borderless mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th width="30%"><i class="bi bi-person me-2"></i>{{ 'name'|trans }}:</th>
+                                        <td>{{ reservation.fullName }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="bi bi-envelope me-2"></i>{{ 'email'|trans }}:</th>
+                                        <td><a href="mailto:{{ reservation.email }}">{{ reservation.email }}</a></td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="bi bi-telephone me-2"></i>{{ 'phone'|trans }}:</th>
+                                        <td>{{ reservation.phoneNumber }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                {# Reservation Information #}
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-calendar-event me-2"></i>{{ 'reservation_information'|trans }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-borderless mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th width="30%"><i class="bi bi-calendar3 me-2"></i>{{ 'date'|trans }}:</th>
+                                        <td>{{ reservation.reservationDate|date('l, F j, Y') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="bi bi-clock me-2"></i>{{ 'time'|trans }}:</th>
+                                        <td>{{ reservation.timeSlot|date('H:i') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="bi bi-people me-2"></i>{{ 'party_size'|trans }}:</th>
+                                        <td>{{ reservation.partySize }} {{ 'guests'|trans }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="bi bi-tag me-2"></i>{{ 'type'|trans }}:</th>
+                                        <td>
+                                            {% if reservation.reservationType.value == 'private_dining' %}
+                                                <span class="badge bg-warning">{{ 'private_dining'|trans }}</span>
+                                            {% else %}
+                                                <span class="badge bg-info">{{ 'regular_dining'|trans }}</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                {# Special Requests #}
+                <div class="col-md-8 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-chat-left-text me-2"></i>{{ 'special_requests'|trans }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if reservation.specialRequests %}
+                                <p class="mb-0">{{ reservation.specialRequests }}</p>
+                            {% else %}
+                                <p class="text-muted mb-0"><i>{{ 'no_special_requests'|trans }}</i></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {# Status Management #}
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-warning text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-gear me-2"></i>{{ 'status_management'|trans }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6 mb-2">
+                                    <label class="form-label fw-bold">{{ 'current_status'|trans }}:</label>
+                                    <div>
+                                        {% if reservation.status.value == 'pending' %}
+                                            <span class="badge bg-warning fs-6">{{ 'pending'|trans }}</span>
+                                        {% elseif reservation.status.value == 'confirmed' %}
+                                            <span class="badge bg-success fs-6">{{ 'confirmed'|trans }}</span>
+                                        {% elseif reservation.status.value == 'cancelled' %}
+                                            <span class="badge bg-danger fs-6">{{ 'cancelled'|trans }}</span>
+                                        {% elseif reservation.status.value == 'completed' %}
+                                            <span class="badge bg-secondary fs-6">{{ 'completed'|trans }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            
+                                <div class="col-6 mb-2">
+                                    <form method="post" action="{{ path('app_admin_reservation_status', {id: reservation.id}) }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('reservation_status_' ~ reservation.id) }}">
+                                        
+                                        <label class="form-label fw-bold">{{ 'change_status_to'|trans }}:</label>
+                                        <select name="status" class="form-select mb-3">
+                                            {% for status in ['Pending', 'Confirmed', 'Cancelled', 'Completed'] %}
+                                                <option value="{{ status }}" 
+                                                    {% if reservation.status.value == status %}selected disabled{% endif %}>
+                                                    {{ status|lower|trans }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="bi bi-check-circle me-2"></i>{{ 'update_status'|trans }}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
