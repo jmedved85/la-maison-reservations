@@ -27,16 +27,23 @@ class AdminController extends AbstractController
         // Get filter parameters
         $filterDate = $request->query->get('date');
         $filterStatus = $request->query->get('status');
+        $sortOrder = strtoupper($request->query->get('order', 'ASC'));
         $page = max(1, (int) $request->query->get('page', 1));
         $limit = 15; // Items per page
 
-        // Parse filter date or default to today
-        try {
-            $date = $filterDate
-                ? new \DateTimeImmutable($filterDate)
-                : new \DateTimeImmutable('today');
-        } catch (\Exception $e) {
-            $date = new \DateTimeImmutable('today');
+        // Validate sort order
+        if (!in_array($sortOrder, ['ASC', 'DESC'])) {
+            $sortOrder = 'ASC';
+        }
+
+        // Parse filter date (null = show all upcoming reservations)
+        $date = null;
+        if ($filterDate && '' !== $filterDate) {
+            try {
+                $date = new \DateTimeImmutable($filterDate);
+            } catch (\Exception $e) {
+                $date = null;
+            }
         }
 
         // Parse filter status
@@ -49,13 +56,8 @@ class AdminController extends AbstractController
             }
         }
 
-        // Get reservations for the filtered date and status
-        $allReservations = $this->reservationRepository->findByDate($date, $status);
-
-        // Sort by time slot (ascending)
-        usort($allReservations, function ($a, $b) {
-            return $a->getTimeSlot() <=> $b->getTimeSlot();
-        });
+        // Get reservations (upcoming by default, or filtered by date/status)
+        $allReservations = $this->reservationRepository->findForAdminList($date, $status, $sortOrder);
 
         // Calculate pagination
         $totalReservations = count($allReservations);
@@ -63,18 +65,25 @@ class AdminController extends AbstractController
         $offset = ($page - 1) * $limit;
         $reservations = array_slice($allReservations, $offset, $limit);
 
-        // Calculate statistics for the filtered date
-        $stats = $this->calculateStatistics($date, $allReservations);
+        // Calculate statistics
+        $stats = $this->calculateStatistics($allReservations);
 
-        // Get fully booked slots for visual marking
-        $fullyBookedSlots = $this->getFullyBookedSlots($date);
+        // Get fully booked slots and slot statistics only when viewing a specific date
+        $fullyBookedSlots = [];
+        $slotStatistics = [];
+        if (null !== $date) {
+            $fullyBookedSlots = $this->getFullyBookedSlots($date);
+            $slotStatistics = $this->availabilityService->getSlotStatistics($date, ReservationType::Regular);
+        }
 
         return $this->render('admin/index.html.twig', [
             'reservations' => $reservations,
             'filterDate' => $date,
             'filterStatus' => $filterStatus,
+            'sortOrder' => $sortOrder,
             'stats' => $stats,
             'fullyBookedSlots' => $fullyBookedSlots,
+            'slotStatistics' => $slotStatistics,
             'pagination' => [
                 'currentPage' => $page,
                 'totalPages' => $totalPages,
@@ -145,7 +154,7 @@ class AdminController extends AbstractController
      *
      * @return array<string, int>
      */
-    private function calculateStatistics(\DateTimeInterface $date, array $reservations): array
+    private function calculateStatistics(array $reservations): array
     {
         $totalGuests = 0;
         $pendingCount = 0;
@@ -165,22 +174,18 @@ class AdminController extends AbstractController
             }
         }
 
-        // Count fully booked slots
-        $fullyBookedSlots = $this->getFullyBookedSlots($date);
-
         return [
             'totalReservations' => count($reservations),
             'expectedGuests' => $totalGuests,
             'pendingCount' => $pendingCount,
             'confirmedCount' => $confirmedCount,
-            'fullyBookedSlotsCount' => count($fullyBookedSlots),
         ];
     }
 
     /**
      * Get array of fully booked time slots (20/20 guests for regular dining).
      *
-     * @return array<string> Array of time strings in H:i format
+     * @return array<string> Array of strings in format 'Y-m-d|H:i'
      */
     private function getFullyBookedSlots(\DateTimeInterface $date): array
     {
@@ -192,7 +197,8 @@ class AdminController extends AbstractController
         foreach ($allSlots as $timeSlot) {
             // Check if slot is fully booked (0 remaining capacity)
             if ($this->availabilityService->isSlotFullyBooked($date, $timeSlot, ReservationType::Regular)) {
-                $fullyBooked[] = $timeSlot;
+                // Format: 2026-03-24|19:00
+                $fullyBooked[] = $date->format('Y-m-d') . '|' . $timeSlot;
             }
         }
 

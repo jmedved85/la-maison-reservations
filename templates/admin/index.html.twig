@@ -26,7 +26,8 @@
                             <form method="get" action="{{ path('app_admin') }}" class="row g-3">
                                 <div class="col-md-4">
                                     <label for="filter_date" class="form-label">{{ 'date'|trans }}</label>
-                                    <input type="date" class="form-control" id="filter_date" name="date" value="{{ app.request.query.get('date', 'now'|date('Y-m-d')) }}">
+                                    <input type="date" class="form-control" id="filter_date" name="date" value="{{ app.request.query.get('date', '') }}" placeholder="{{ 'all_upcoming'|trans }}">
+                                    <small class="form-text text-muted">{{ 'leave_empty_for_all_upcoming'|trans }}</small>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="filter_status" class="form-label">{{ 'status'|trans }}</label>
@@ -38,7 +39,7 @@
                                         <option value="completed" {{ app.request.query.get('status') == 'completed' ? 'selected' : '' }}>{{ 'completed'|trans }}</option>
                                     </select>
                                 </div>
-                                <div class="col-md-4 d-flex align-items-end">
+                                <div class="col-md-4 d-flex align-items-end mb-4">
                                     <button type="submit" class="btn btn-primary me-2">
                                         <i class="bi bi-search me-1"></i>{{ 'filter'|trans }}
                                     </button>
@@ -99,7 +100,10 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="card-title text-uppercase mb-1">{{ 'fully_booked_slots'|trans }}</h6>
-                                    <h2 class="mb-0">{{ stats.fullyBookedSlotsCount }}</h2>
+                                    <h2 class="mb-0">{{ fullyBookedSlots|length }}</h2>
+                                    {# {% if filterDate is null %}
+                                        <small class="d-block mt-1 opacity-75">{{ 'for_selected_date'|trans }}</small>
+                                    {% endif %} #}
                                 </div>
                                 <i class="bi bi-exclamation-triangle-fill" style="font-size: 2.5rem; opacity: 0.3;"></i>
                             </div>
@@ -107,6 +111,66 @@
                     </div>
                 </div>
             </div>
+
+            {# Slot Capacity Overview - Only shown when viewing a specific date #}
+            {% if filterDate is not null %}
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <i class="bi bi-calendar2-range me-2"></i>{{ 'slot_capacity_overview'|trans }}
+                                        <span class="badge bg-secondary ms-2">{{ filterDate|date('l, F j, Y') }}</span>
+                                    </span>
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#slotCapacityCollapse" aria-expanded="true" aria-controls="slotCapacityCollapse">
+                                        <i class="bi bi-chevron-down"></i>
+                                    </button>
+                                </h5>
+                            </div>
+                            <div class="collapse" id="slotCapacityCollapse">
+                                <div class="card-body">
+                                    <div class="row g-2">
+                                        {% for stat in slotStatistics %}
+                                            {% set capacityPercentage = (stat.totalGuests / 20 * 100)|round %}
+                                            {% set badgeClass = stat.isFullyBooked ? 'bg-danger' : (capacityPercentage >= 75 ? 'bg-warning' : 'bg-success') %}
+                                            
+                                            <div class="col-6 col-md-3 col-lg-2">
+                                                <div class="card text-center {% if stat.isFullyBooked %}border-danger{% endif %}">
+                                                    <div class="card-body p-2">
+                                                        <h6 class="mb-1">
+                                                            {% if stat.isFullyBooked %}
+                                                                <i class="bi bi-exclamation-triangle-fill text-danger me-1"></i>
+                                                            {% endif %}
+                                                            {{ stat.timeSlot }}
+                                                        </h6>
+                                                        <span class="badge {{ badgeClass }} w-100">
+                                                            {{ stat.totalGuests }}/20 {{ 'guests'|trans }}
+                                                        </span>
+                                                        <small class="text-muted d-block mt-1">
+                                                            {{ stat.reservationCount }} {{ 'res'|trans }}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    {# Legend for capacity colors #}
+                                    <div class="mt-3 pt-3 border-top">
+                                        <small class="text-muted">
+                                            <strong>{{ 'legend'|trans }}:</strong>
+                                            <span class="badge bg-success ms-2">< 75%</span>
+                                            <span class="badge bg-warning ms-1">75-99%</span>
+                                            <span class="badge bg-danger ms-1">100% ({{ 'fully_booked'|trans }})</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
 
             {# Reservations Table #}
             <div class="row">
@@ -116,7 +180,11 @@
                             <h5 class="mb-0">
                                 <i class="bi bi-list-ul me-2"></i>{{ 'reservations_list'|trans }}
                             </h5>
-                            <span class="badge bg-primary">{{ 'showing'|trans }}: {{ filterDate|date('l, F j, Y') }}</span>
+                            {% if filterDate is not null %}
+                                <span class="badge bg-primary">{{ 'showing'|trans }}: {{ filterDate|date('l, F j, Y') }}</span>
+                            {% else %}
+                                <span class="badge bg-info">{{ 'showing'|trans }}: {{ 'all_upcoming_reservations'|trans }}</span>
+                            {% endif %}
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
@@ -126,8 +194,14 @@
                                             <th>{{ 'reference_code'|trans }}</th>
                                             <th>{{ 'guest_name'|trans }}</th>
                                             <th>
-                                                <a href="#" class="text-decoration-none text-dark">
-                                                    {{ 'date'|trans }} <i class="bi bi-arrow-down"></i>
+                                                {% set newOrder = sortOrder == 'ASC' ? 'DESC' : 'ASC' %}
+                                                <a href="{{ path('app_admin', {date: app.request.get('date'), status: app.request.get('status'), order: newOrder, page: 1}) }}" class="text-decoration-none text-dark">
+                                                    {{ 'date'|trans }}
+                                                    {% if sortOrder == 'ASC' %}
+                                                        <i class="bi bi-arrow-down"></i>
+                                                    {% else %}
+                                                        <i class="bi bi-arrow-up"></i>
+                                                    {% endif %}
                                                 </a>
                                             </th>
                                             <th>{{ 'time'|trans }}</th>
@@ -151,8 +225,8 @@
                                                     </td>
                                                     <td>{{ reservation.reservationDate|date('M j, Y') }}</td>
                                                     <td>
-                                                        {% if isFullyBooked %}
-                                                            <span class="badge bg-danger">
+                                                        {% if isFullyBooked and reservation.reservationType.value == 'regular' %}
+                                                            <span class="badge bg-danger" title="Fully booked slot (20/20 guests)">
                                                                 <i class="bi bi-exclamation-circle me-1"></i>{{ reservation.timeSlot|date('H:i') }}
                                                             </span>
                                                         {% else %}
@@ -207,12 +281,12 @@
                                 <nav aria-label="Reservations pagination">
                                     <ul class="pagination pagination-sm mb-0">
                                         <li class="page-item {{ pagination.currentPage == 1 ? 'disabled' : '' }}">
-                                            <a class="page-link" href="{{ path('app_admin', {page: pagination.currentPage - 1, date: app.request.get('date'), status: app.request.get('status')}) }}" tabindex="{{ pagination.currentPage == 1 ? '-1' : '' }}">{{ 'previous'|trans }}</a>
+                                            <a class="page-link" href="{{ path('app_admin', {page: pagination.currentPage - 1, date: app.request.get('date'), status: app.request.get('status'), order: sortOrder}) }}" tabindex="{{ pagination.currentPage == 1 ? '-1' : '' }}">{{ 'previous'|trans }}</a>
                                         </li>
                                         {% for page in 1..pagination.totalPages %}
                                             {% if page == 1 or page == pagination.totalPages or (page >= pagination.currentPage - 1 and page <= pagination.currentPage + 1) %}
                                                 <li class="page-item {{ page == pagination.currentPage ? 'active' : '' }}">
-                                                    <a class="page-link" href="{{ path('app_admin', {page: page, date: app.request.get('date'), status: app.request.get('status')}) }}">{{ page }}</a>
+                                                    <a class="page-link" href="{{ path('app_admin', {page: page, date: app.request.get('date'), status: app.request.get('status'), order: sortOrder}) }}">{{ page }}</a>
                                                 </li>
                                             {% elseif page == pagination.currentPage - 2 or page == pagination.currentPage + 2 %}
                                                 <li class="page-item disabled">
@@ -221,7 +295,7 @@
                                             {% endif %}
                                         {% endfor %}
                                         <li class="page-item {{ pagination.currentPage == pagination.totalPages ? 'disabled' : '' }}">
-                                            <a class="page-link" href="{{ path('app_admin', {page: pagination.currentPage + 1, date: app.request.get('date'), status: app.request.get('status')}) }}">{{ 'next'|trans }}</a>
+                                            <a class="page-link" href="{{ path('app_admin', {page: pagination.currentPage + 1, date: app.request.get('date'), status: app.request.get('status'), order: sortOrder}) }}">{{ 'next'|trans }}</a>
                                         </li>
                                     </ul>
                                 </nav>

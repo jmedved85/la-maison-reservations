@@ -59,6 +59,54 @@ class ReservationRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find reservations for admin list view.
+     * If date is null, returns all upcoming reservations.
+     * If date is provided, returns reservations for that specific date.
+     * Can be filtered by status and sorted by date.
+     *
+     * @param string $sortOrder 'ASC' or 'DESC'
+     *
+     * @return Reservation[]
+     */
+    public function findForAdminList(
+        ?\DateTimeInterface $date = null,
+        ?ReservationStatus $status = null,
+        string $sortOrder = 'ASC'
+    ): array {
+        $qb = $this->createQueryBuilder('r');
+
+        if (null === $date) {
+            // No date filter - show all upcoming reservations
+            $qb->andWhere('r.reservationDate >= :today')
+                ->setParameter('today', new \DateTime('today'))
+            ;
+        } else {
+            // Specific date filter
+            $qb->andWhere('r.reservationDate = :date')
+                ->setParameter('date', $date)
+            ;
+        }
+
+        if (null !== $status) {
+            $qb->andWhere('r.status = :status')
+                ->setParameter('status', $status)
+            ;
+        }
+
+        // Validate sort order
+        $sortOrder = strtoupper($sortOrder);
+        if (!in_array($sortOrder, ['ASC', 'DESC'])) {
+            $sortOrder = 'ASC';
+        }
+
+        $qb->orderBy('r.reservationDate', $sortOrder)
+            ->addOrderBy('r.timeSlot', $sortOrder)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Calculate total number of guests for a specific date and time slot
      * Excludes cancelled reservations.
      */
