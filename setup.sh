@@ -65,20 +65,32 @@ docker compose exec php bin/console doctrine:migrations:migrate --no-interaction
 echo "✓ Migrations executed"
 echo ""
 
-# 6. Load fixtures (seed initial data)
-echo "Step 7: Loading initial data (time slots, tables)..."
+# 6. Create test database
+echo "Step 7: Creating test database..."
+docker compose exec mysql mysql -uroot -ppass1234 -e "CREATE DATABASE IF NOT EXISTS \`la_maison_reservations_test\`;"
+echo "✓ Test database created (or already exists)"
+echo ""
+
+# 7. Run migrations on test database
+echo "Step 8: Running migrations on test database..."
+docker compose exec mysql sh -c "mysqldump -uroot -ppass1234 --no-data la_maison_reservations_dev | mysql -uroot -ppass1234 la_maison_reservations_test"
+echo "✓ Test database schema synchronized"
+echo ""
+
+# 8. Load fixtures (seed initial data)
+echo "Step 9: Loading initial data (time slots, tables)..."
 docker compose exec php bin/console doctrine:fixtures:load --no-interaction
 echo "✓ Initial data loaded"
 echo ""
 
-# 7. Asset compile
-echo "Step 8: Compiling assets..."
+# 9. Asset compile
+echo "Step 10: Compiling assets..."
 docker compose exec php bin/console asset-map:compile
 echo "✓ Assets compiled"
 echo ""
 
-# 8. Clear cache (optional but recommended)
-echo "Step 9: Clearing cache..."
+# 10. Clear cache (optional but recommended)
+echo "Step 11: Clearing cache..."
 docker compose exec php bin/console cache:clear
 echo "✓ Cache cleared"
 echo ""
