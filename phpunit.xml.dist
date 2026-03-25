@@ -12,10 +12,11 @@
         <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
-        <env name="DATABASE_URL" value="mysql://root:pass1234@mysql-la_maison_reservations:3306/la-maison-reservations"/>
+        <env name="DATABASE_URL" value="mysql://root:pass1234@mysql-la_maison_reservations:3306/la_maison_reservations"/>
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+        <server name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
     </php>
 
     <testsuites>

@@ -45,7 +45,7 @@ composer audit
 symfony check:security
 
 # 7. Tests
-# echo " "
-# echo "Running tests..."
-# echo " "
-# docker compose exec php ./vendor/bin/phpunit
+echo " "
+echo "Running tests..."
+echo " "
+docker compose exec php ./vendor/bin/phpunit
