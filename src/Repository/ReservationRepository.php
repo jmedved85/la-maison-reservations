@@ -81,7 +81,6 @@ class ReservationRepository extends ServiceEntityRepository
                 ->setParameter('today', new \DateTime('today'))
             ;
         } else {
-            // Specific date filter
             $qb->andWhere('r.reservationDate = :date')
                 ->setParameter('date', $date)
             ;
@@ -93,7 +92,6 @@ class ReservationRepository extends ServiceEntityRepository
             ;
         }
 
-        // Validate sort order
         $sortOrder = strtoupper($sortOrder);
         if (!in_array($sortOrder, ['ASC', 'DESC'])) {
             $sortOrder = 'ASC';

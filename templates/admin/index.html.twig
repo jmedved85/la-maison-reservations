@@ -4,6 +4,7 @@
 
 {% block content %}
     <div class="col-md-12">
+        {# Welcome Message & Logo #}
         <div class="d-flex justify-content-between align-items-center mx-3">
             <h1 class="display-6">
                 <span class="d-none d-lg-inline">{{ 'welcome_admin_dashboard'|trans }}</span>
@@ -170,7 +171,7 @@
                 </div>
             {% endif %}
 
-            {# Reservations Table #}
+            {# Reservations List #}
             <div class="row">
                 <div class="col-md-12">
                     <div class="card shadow-sm">
@@ -252,7 +253,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-end">
-                                                        <a href="{{ path('app_admin_reservation_detail', {id: reservation.id}) }}" class="btn btn-sm btn-outline-primary">
+                                                        <a href="{{ path('app_admin_reservation_show', {id: reservation.id}) }}" class="btn btn-sm btn-outline-primary">
                                                             <i class="bi bi-eye"></i>
                                                         </a>
                                                     </td>

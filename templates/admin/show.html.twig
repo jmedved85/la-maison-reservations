@@ -5,17 +5,6 @@
 {% block content %}
     <div class="container-fluid">
         <div class="container">
-            {# Flash Messages #}
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
-                        <i class="bi bi-{{ label == 'success' ? 'check-circle' : 'exclamation-triangle' }}-fill me-2"></i>
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            {% endfor %}
-
             {# Header #}
             <div class="row mb-3">
                 <div class="col-md-12">
