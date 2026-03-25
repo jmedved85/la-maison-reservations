@@ -71,7 +71,7 @@ class ReservationRepository extends ServiceEntityRepository
     public function findForAdminList(
         ?\DateTimeInterface $date = null,
         ?ReservationStatus $status = null,
-        string $sortOrder = 'ASC'
+        string $sortOrder = 'ASC',
     ): array {
         $qb = $this->createQueryBuilder('r');
 
