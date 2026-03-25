@@ -30,7 +30,6 @@ class ReservationAvailabilityService
         ReservationType $type,
         int $partySize,
     ): array {
-        // Get all possible time slots for this type and date
         $allSlots = $this->timeSlotService->getAvailableTimeSlots($date, $type);
 
         $availableSlots = [];

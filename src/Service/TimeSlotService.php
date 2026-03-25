@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\ReservationType;
+use App\Entity\TimeSlot;
 use App\Repository\TimeSlotRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -155,7 +156,7 @@ class TimeSlotService
     /**
      * Get all time slots from database (both regular and private).
      *
-     * @return array<\App\Entity\TimeSlot>
+     * @return array<TimeSlot>
      */
     public function getAllTimeSlotsFromDatabase(): array
     {
