@@ -55,7 +55,7 @@
 
             {# Statistics Cards #}
             <div class="row mb-4">
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2 mb-md-0">
                     <div class="card text-white bg-primary shadow-sm">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -68,7 +68,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2 mb-md-0">
                     <div class="card text-white bg-success shadow-sm">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -81,7 +81,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2 mb-md-0">
                     <div class="card text-white bg-warning shadow-sm">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -94,7 +94,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2 mb-md-0">
                     <div class="card text-white bg-danger shadow-sm">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -117,16 +117,14 @@
                 <div class="row mb-4">
                     <div class="col-md-12">
                         <div class="card shadow-sm">
-                            <div class="card-header bg-white">
-                                <h5 class="mb-0 d-flex justify-content-between align-items-center">
-                                    <span>
-                                        <i class="bi bi-calendar2-range me-2"></i>{{ 'slot_capacity_overview'|trans }}
-                                        <span class="badge bg-secondary ms-2">{{ filterDate|date('l, F j, Y') }}</span>
-                                    </span>
-                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#slotCapacityCollapse" aria-expanded="true" aria-controls="slotCapacityCollapse">
-                                        <i class="bi bi-chevron-down"></i>
-                                    </button>
-                                </h5>
+                            <div class="card-header bg-white d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+                                <span>
+                                    <h5><i class="bi bi-calendar2-range me-2"></i>{{ 'slot_capacity_overview'|trans }}</h5>
+                                    <span class="badge bg-secondary">{{ filterDate|date('l, F j, Y') }}</span>
+                                </span>
+                                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#slotCapacityCollapse" aria-expanded="true" aria-controls="slotCapacityCollapse">
+                                    <i class="bi bi-chevron-down"></i>
+                                </button>
                             </div>
                             <div class="collapse" id="slotCapacityCollapse">
                                 <div class="card-body">
@@ -176,7 +174,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <div class="card-header bg-white d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
                             <h5 class="mb-0">
                                 <i class="bi bi-list-ul me-2"></i>{{ 'reservations_list'|trans }}
                             </h5>
@@ -191,8 +189,6 @@
                                 <table class="table table-hover mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>{{ 'reference_code'|trans }}</th>
-                                            <th>{{ 'guest_name'|trans }}</th>
                                             <th>
                                                 {% set newOrder = sortOrder == 'ASC' ? 'DESC' : 'ASC' %}
                                                 <a href="{{ path('app_admin', {date: app.request.get('date'), status: app.request.get('status'), order: newOrder, page: 1}) }}" class="text-decoration-none text-dark">
@@ -204,6 +200,8 @@
                                                     {% endif %}
                                                 </a>
                                             </th>
+                                            <th>{{ 'guest_name'|trans }}</th>
+                                            <th>{{ 'reference_code'|trans }}</th>
                                             <th>{{ 'time'|trans }}</th>
                                             <th>{{ 'party_size'|trans }}</th>
                                             <th>{{ 'type'|trans }}</th>
@@ -215,15 +213,16 @@
                                         {% if reservations is not empty %}
                                             {% for reservation in reservations %}
                                                 {% set isFullyBooked = reservation.reservationDate|date('Y-m-d') ~ '|' ~ reservation.timeSlot|date('H:i') in fullyBookedSlots %}
+
                                                 <tr>
-                                                    <td>
-                                                        <code class="text-primary">{{ reservation.referenceCode }}</code>
-                                                    </td>
+                                                    <td>{{ reservation.reservationDate|date('M j, Y') }}</td>
                                                     <td>
                                                         <i class="bi bi-person-circle me-1"></i>
                                                         {{ reservation.fullName }}
                                                     </td>
-                                                    <td>{{ reservation.reservationDate|date('M j, Y') }}</td>
+                                                    <td>
+                                                        <code class="text-primary">{{ reservation.referenceCode }}</code>
+                                                    </td>
                                                     <td>
                                                         {% if isFullyBooked and reservation.reservationType.value == 'regular' %}
                                                             <span class="badge bg-danger" title="Fully booked slot (20/20 guests)">

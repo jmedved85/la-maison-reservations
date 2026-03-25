@@ -16,6 +16,10 @@ body {
     cursor: pointer;
 }
 
+.form-select {
+    cursor: pointer;
+}
+
 .nav-link-text-color {
     color: lightblue;
 }
