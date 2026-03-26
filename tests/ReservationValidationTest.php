@@ -131,7 +131,6 @@ class ReservationValidationTest extends KernelTestCase
      * TEST 4: Special Requests Length Limit.
      *
      * Business Rule: Special requests cannot exceed 500 characters
-     * This prevents excessive text and database issues
      */
     public function testSpecialRequestsMaxLength(): void
     {
