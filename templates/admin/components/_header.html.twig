@@ -7,7 +7,7 @@
                 {{ 'home'|trans }}
             </a>
 
-            <button class="navbar-toggler"
+            {# <button class="navbar-toggler"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarNav"
@@ -16,10 +16,10 @@
                 aria-label="Toggle navigation"
             >
                 <span class="navbar-toggler-icon"></span>
-            </button>
+            </button> #}
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+            {# <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto"> #}
                     {# Commented out - authentication disabled per specification #}
                     {# {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">
@@ -47,8 +47,8 @@
                             </ul>
                         </li>
                     {% endif %} #}
-                </ul>
-            </div>
+                {# </ul>
+            </div> #}
         </div>
     </nav>
 {% endblock %}

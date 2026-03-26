@@ -6,7 +6,6 @@ import './styles/app.css';
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
-// Reservation form dynamic behavior
 document.addEventListener('DOMContentLoaded', function() {
     const reservationForm = document.querySelector('.reservation-form');
 
@@ -19,6 +18,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const typeSelect = document.querySelector('#reservation_form_reservationType');
     const partySizeInput = document.querySelector('#reservation_form_partySize');
     const timeSlotInput = document.querySelector('#reservation_form_timeSlot');
+
+    // Date constraints
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 30);
+
+    // Initialize Flatpickr for date only
+    flatpickr(dateInput, {
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d. m. Y.",
+        defaultDate: null,
+        minDate: tomorrow,
+        maxDate: maxDate,
+        placeholder: "Select Date",
+        disable: [
+            function(date) {
+                return date < tomorrow;
+            }
+        ],
+        onReady: function(selectedDates, dateStr, instance) {
+            instance.altInput.style.cursor = 'pointer';
+            instance.altInput.placeholder = 'Select Date';
+        },
+        onChange: function(selectedDates, dateStr, instance) {
+            handleDateChange(dateStr);
+        }
+    });
 
     // Initially disable type selection until date is chosen
     if (typeSelect) {
@@ -60,40 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (missing.length === 0) return null;
 
         return `Please select ${missing.join(', ')} first`;
-    }
-
-    // Date constraints
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
-
-    const maxDate = new Date();
-    maxDate.setDate(maxDate.getDate() + 30);
-
-    // Initialize Flatpickr for date only
-    let datePicker = null;
-    if (dateInput) {
-        datePicker = flatpickr(dateInput, {
-            dateFormat: "Y-m-d",
-            altInput: true,
-            altFormat: "d. m. Y.",
-            defaultDate: null,
-            minDate: tomorrow,
-            maxDate: maxDate,
-            placeholder: "Select Date",
-            disable: [
-                function(date) {
-                    return date < tomorrow;
-                }
-            ],
-            onReady: function(selectedDates, dateStr, instance) {
-                instance.altInput.style.cursor = 'pointer';
-                instance.altInput.placeholder = 'Select Date';
-            },
-            onChange: function(selectedDates, dateStr, instance) {
-                handleDateChange(dateStr);
-            }
-        });
     }
 
     // Handle date change
@@ -187,11 +183,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.slots && data.slots.length > 0) {
                     // Populate select with available time slots
                     let options = '<option value="">Select time slot</option>';
-                    
+
                     data.slots.forEach(slot => {
                         options += `<option value="${slot.value}">${slot.label}</option>`;
                     });
-                    
+
                     if (timeSlotSelect) {
                         timeSlotSelect.innerHTML = options;
                         timeSlotSelect.disabled = false;
@@ -199,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     // No slots available
                     const message = data.message || 'No available slots for the selected criteria';
-                    
+
                     if (timeSlotSelect) {
                         timeSlotSelect.innerHTML = `<option value="">${message}</option>`;
                         timeSlotSelect.disabled = true;
@@ -269,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const buttonText = submitButton.querySelector('span:not(.spinner-border):not(.sending-text)');
         const spinner = submitButton.querySelector('.spinner-border');
         const sendingText = submitButton.querySelector('.sending-text');
-        
+
         // Show spinner and disable button
         if (spinner && sendingText && buttonText) {
             buttonText.classList.add('d-none');
