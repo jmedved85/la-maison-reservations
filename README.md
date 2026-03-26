@@ -20,7 +20,7 @@ This application allows restaurant guests to make reservations online and provid
 
 - Docker 20.10+
 - Docker Compose 2.0+
-- (Optional) PHP 8.3+ and Composer if running outside Docker
+- (Optional) PHP 8.4+ and Composer if running outside Docker
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ This script will:
 1. Create `.env.local` with default configuration
 2. Start Docker containers (PHP 8.4, MySQL 8.0, phpMyAdmin)
 3. Install Composer dependencies
-4. Create the database
+4. Create the databases (production & test)
 5. Run migrations
 6. Load fixtures (seed time slots and table configuration)
 7. Compile assets
@@ -52,6 +52,7 @@ This script will:
 
 After setup completes, the application will be available at:
 - **Web Application**: http://localhost:8080
+- **Admin Dashboard**: http://localhost:8080/admin
 - **phpMyAdmin**: http://localhost:8090 (root / pass1234)
 
 ## Manual Setup (Alternative)
@@ -146,7 +147,7 @@ Convenience scripts are provided in the project root:
 ./clear-cache.sh        # Clear Symfony cache
 ./migrations-migrate.sh # Run database migrations
 ./asset-map-compile.sh  # Compile frontend assets
-./qa.sh                 # Run code quality checks (PHPStan, PHP-CS-Fixer)
+./qa.sh                 # Run code quality checks (PHPStan, PHP-CS-Fixer, PHPUnit tests)
 ```
 
 ## Running Tests
@@ -160,11 +161,12 @@ docker compose exec php bin/phpunit
 ```
 
 Tests cover:
-- Reservation validation rules
-- Capacity checking logic
-- Private dining availability
-- Date and time slot validation
-- TimeSlot fixtures
+- **Integration Tests** - Real database operations with capacity validation
+- **Regular Dining Capacity** - Slot availability based on accumulated guest count
+- **Private Dining Rules** - Single reservation per slot, Friday/Saturday only
+- **Reservation Validation** - Email, phone, party size, special requests constraints
+- **Reference Code Generation** - Unique LM-XXXXX codes
+- **Server-Side Validation** - Prevents double booking and capacity overflow
 
 ## Accessing the Application
 
@@ -175,7 +177,7 @@ Features:
 - Make a reservation
 - Select date and time
 - Choose regular or private dining (if applicable)
-- Receive unique reference code
+- Receive confirmation and unique reference code
 
 ### Admin Dashboard
 Visit: http://localhost:8080/admin
@@ -198,6 +200,29 @@ You can inspect:
 - `reservation` table - All reservations
 - `time_slot` table - Seeded time slots (26 records)
 - `user` table - Admin users (not implemented)
+
+## Design Decisions & Assumptions
+
+### Architecture Choices
+- **Service Layer Pattern**: Used `ReservationAvailabilityService` and `TimeSlotService` to separate business logic from controllers, making capacity checks reusable and testable.
+- **Enum Types**: Used enums (`ReservationType`, `ReservationStatus`) for type safety and better IDE support.
+- **Database-Driven Time Slots**: Time slots are stored in the database (seeded via fixtures) rather than being purely generated on-the-fly, allowing for future flexibility (e.g., blocking specific slots for maintenance).
+
+### Validation Strategy
+- **Dual Validation**: Client-side (JavaScript) provides instant feedback for UX, while server-side (Symfony validators + controller checks) is the source of truth.
+- **Capacity Check Before Save**: Added explicit availability check in `HomeController` to prevent race conditions where two users might submit at the same time.
+
+### Beyond Specification
+The following features were implemented beyond the original requirements:
+- **Internationalization**: Using Symfony Translation component
+- **Pagination**: Admin dashboard supports pagination for large datasets
+- **Slot Statistics View**: Visual capacity overview per time slot for selected dates
+- **Code Quality Tools**: PHPStan (level 6), PHP-CS-Fixer, comprehensive test suite
+- **phpMyAdmin**: Included for easier database inspection during development
+
+### Known Limitations
+- **No Authentication**: As specified, `/admin` is publicly accessible.
+- **No Email Sending**: Confirmation is shown via modal; production would email the reference code to guests.
 
 ## Notes
 
