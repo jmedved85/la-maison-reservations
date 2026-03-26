@@ -128,10 +128,6 @@ Time slots and table configuration are **stored in the database** and automatica
 - 19 regular dining slots (12:00 - 21:00, 30-minute intervals)
 - 7 private dining slots (18:00 - 21:00, 30-minute intervals)
 
-**Restaurant Tables:**
-- 8 regular dining tables (total capacity: 30 seats)
-- 1 private dining table (capacity: 12 seats)
-
 This data is loaded via Doctrine Fixtures (see `src/DataFixtures/`) and can be customized by:
 1. Modifying fixture class
 2. Running: `docker compose exec php bin/console doctrine:fixtures:load`
@@ -168,7 +164,7 @@ Tests cover:
 - Capacity checking logic
 - Private dining availability
 - Date and time slot validation
-- TimeSlot and RestaurantTable fixtures
+- TimeSlot fixtures
 
 ## Accessing the Application
 
@@ -201,8 +197,7 @@ Credentials: `root` / `pass1234`
 You can inspect:
 - `reservation` table - All reservations
 - `time_slot` table - Seeded time slots (26 records)
-- `restaurant_table` table - Seeded tables (9 records)
-- `user` table - Admin users (if any)
+- `user` table - Admin users (not implemented)
 
 ## Notes
 

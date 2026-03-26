@@ -2,7 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\RestaurantTable;
 use App\Entity\TimeSlot;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -40,35 +39,6 @@ class AppFixtures extends Fixture
             $timeSlot->setIsActive(true);
             $manager->persist($timeSlot);
         }
-
-        $regularTables = [
-            ['number' => '1', 'capacity' => 2, 'location' => 'Window'],
-            ['number' => '2', 'capacity' => 2, 'location' => 'Window'],
-            ['number' => '3', 'capacity' => 4, 'location' => 'Main Floor'],
-            ['number' => '4', 'capacity' => 4, 'location' => 'Main Floor'],
-            ['number' => '5', 'capacity' => 4, 'location' => 'Main Floor'],
-            ['number' => '6', 'capacity' => 6, 'location' => 'Main Floor'],
-            ['number' => '7', 'capacity' => 6, 'location' => 'Corner'],
-            ['number' => '8', 'capacity' => 2, 'location' => 'Bar Area'],
-        ];
-
-        foreach ($regularTables as $tableData) {
-            $table = new RestaurantTable();
-            $table->setTableNumber($tableData['number']);
-            $table->setCapacity($tableData['capacity']);
-            $table->setTableType('regular');
-            $table->setLocation($tableData['location']);
-            $table->setIsActive(true);
-            $manager->persist($table);
-        }
-
-        $privateTable = new RestaurantTable();
-        $privateTable->setTableNumber('P1');
-        $privateTable->setCapacity(12);
-        $privateTable->setTableType('private');
-        $privateTable->setLocation('Private Dining Room');
-        $privateTable->setIsActive(true);
-        $manager->persist($privateTable);
 
         $manager->flush();
     }
