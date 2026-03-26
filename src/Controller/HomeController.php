@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Reservation;
 use App\Entity\ReservationStatus;
+use App\Exception\ReservationNotAvailableException;
 use App\Form\ReservationFormType;
+use App\Service\ReservationAvailabilityService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +17,7 @@ class HomeController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly ReservationAvailabilityService $availabilityService,
     ) {
     }
 
@@ -27,6 +30,19 @@ class HomeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Check slot availability
+            $timeSlot = $reservation->getTimeSlot()->format('H:i');
+            $isAvailable = $this->availabilityService->isSlotAvailable(
+                $reservation->getReservationDate(),
+                $timeSlot,
+                $reservation->getReservationType(),
+                $reservation->getPartySize()
+            );
+
+            if (!$isAvailable) {
+                throw new ReservationNotAvailableException('Selected time slot is not available. Please choose another time.');
+            }
+
             $reservation->setStatus(ReservationStatus::Pending);
 
             $this->entityManager->persist($reservation);
