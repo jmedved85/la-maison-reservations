@@ -80,6 +80,7 @@ echo ""
 # 8. Load fixtures (seed initial data)
 echo "Step 9: Loading initial data (time slots, tables)..."
 docker compose exec php bin/console doctrine:fixtures:load --no-interaction
+docker compose exec -e APP_ENV=test php bin/console doctrine:fixtures:load --no-interaction
 echo "✓ Initial data loaded"
 echo ""
 
