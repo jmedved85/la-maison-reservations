@@ -22,6 +22,7 @@ This application allows restaurant guests to make reservations online and provid
 - PHP 8.4
 - Doctrine ORM
 - MySQL 8
+- Twig
 - Bootstrap 5
 - Docker / Docker Compose
 - PHPUnit
@@ -207,6 +208,7 @@ Features:
 - Filter by date and status
 - See total expected guests
 - Identify fully-booked slots
+- Slot capacity overview for chosen day
 - Update reservation status
 
 (Note: Authentication is not implemented per specification)

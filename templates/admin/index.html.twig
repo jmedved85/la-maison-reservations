@@ -101,10 +101,11 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="card-title text-uppercase mb-1">{{ 'fully_booked_slots'|trans }}</h6>
-                                    <h2 class="mb-0">{{ fullyBookedSlots|length }}</h2>
-                                    {# {% if filterDate is null %}
+                                    {% if filterDate is null %}
                                         <small class="d-block mt-1 opacity-75">{{ 'for_selected_date'|trans }}</small>
-                                    {% endif %} #}
+                                    {% else %}
+                                        <h2 class="mb-0">{{ fullyBookedSlots|length }}</h2>
+                                    {% endif %}
                                 </div>
                                 <i class="bi bi-exclamation-triangle-fill" style="font-size: 2.5rem; opacity: 0.3;"></i>
                             </div>
