@@ -41,8 +41,7 @@ docker compose exec php ./vendor/bin/phpstan analyze --memory-limit=1G
 echo " "
 echo "Running security checks..."
 echo " "
-composer audit
-symfony check:security
+docker compose exec php composer audit
 
 # 7. Tests
 echo " "
