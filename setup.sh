@@ -6,7 +6,7 @@
 set -e  # Stop script if any command fails
 
 echo "================================================"
-echo "  La Maison Reservations - Initial Setup"
+echo "     La Maison Reservations - Initial Setup"
 echo "================================================"
 echo ""
 
@@ -56,7 +56,7 @@ echo ""
 # 4. Database creation
 echo "Step 5: Creating database..."
 docker compose exec php bin/console doctrine:database:create --if-not-exists
-echo "✓ Database created (or already exists)"
+echo "✓ Database created"
 echo ""
 
 # 5. Migrations
@@ -68,20 +68,21 @@ echo ""
 # 6. Create test database
 echo "Step 7: Creating test database..."
 docker compose exec mysql mysql -uroot -ppass1234 -e "CREATE DATABASE IF NOT EXISTS \`la_maison_reservations_test\`;"
-echo "✓ Test database created (or already exists)"
+echo "✓ Test database created"
 echo ""
 
 # 7. Run migrations on test database
 echo "Step 8: Running migrations on test database..."
 docker compose exec mysql sh -c "mysqldump -uroot -ppass1234 --no-data la_maison_reservations_dev | mysql -uroot -ppass1234 la_maison_reservations_test"
-echo "✓ Test database schema synchronized"
+echo "✓ Migrations executed on test database"
 echo ""
 
 # 8. Load fixtures (seed initial data)
 echo "Step 9: Loading initial data (time slots, tables)..."
 docker compose exec php bin/console doctrine:fixtures:load --no-interaction
+echo "✓ Initial data loaded into dev database"
 docker compose exec -e APP_ENV=test php bin/console doctrine:fixtures:load --no-interaction
-echo "✓ Initial data loaded"
+echo "✓ Initial data loaded into test database"
 echo ""
 
 # 9. Asset compile
@@ -90,19 +91,20 @@ docker compose exec php bin/console asset-map:compile
 echo "✓ Assets compiled"
 echo ""
 
-# 10. Clear cache (optional but recommended)
+# 10. Clear cache
 echo "Step 11: Clearing cache..."
 docker compose exec php bin/console cache:clear
 echo "✓ Cache cleared"
 echo ""
 
 echo "================================================"
-echo "  ✅ Setup completed successfully!"
+echo "       ✅ Setup completed successfully!"
 echo "================================================"
 echo ""
 echo "Application is available at:"
 echo "  🌐 Web: http://localhost:8080"
-echo "  🗄️  phpMyAdmin: http://localhost:8090"
+echo "  📊 Admin Dashboard: http://localhost:8080/admin"
+echo "  🗄️ phpMyAdmin: http://localhost:8090"
 echo ""
 echo "Useful commands:"
 echo "  ./up.sh                    - Start containers"
