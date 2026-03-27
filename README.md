@@ -16,8 +16,21 @@ This application allows restaurant guests to make reservations online and provid
 - **Status Tracking**: Pending, Confirmed, Cancelled, Completed states
 - **Responsive Design**: Built with Bootstrap and modern CSS
 
+## Tech Stack
+
+- Symfony 7
+- PHP 8.4
+- Doctrine ORM
+- MySQL 8
+- Bootstrap 5
+- Docker / Docker Compose
+- PHPUnit
+- PHPStan
+- PHP-CS-Fixer
+
 ## Requirements
 
+- Linux recommended
 - Docker 20.10+
 - Docker Compose 2.0+
 - (Optional) PHP 8.4+ and Composer if running outside Docker
@@ -36,6 +49,13 @@ docker compose version  # Should be 2.0+
 The easiest way to get started is to use the setup script:
 
 ```bash
+# SSH
+git clone git@github.com:jmedved85/la-maison-reservations.git
+
+# HTTPS
+git clone https://github.com/jmedved85/la-maison-reservations.git
+
+cd la-maison-reservations
 chmod +x setup.sh
 ./setup.sh
 ```
@@ -110,7 +130,7 @@ The restaurant's operating rules are configured in `config/packages/restaurant.y
 
 ### Regular Dining
 - **Capacity**: 20 guests per time slot
-- **Party Size**: 1-10 guests
+- **Party Size per Reservation**: 1-10 guests
 - **Days**: Monday to Sunday
 - **Hours**: 12:00 - 21:00
 
