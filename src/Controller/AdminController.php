@@ -24,57 +24,32 @@ class AdminController extends AbstractController
     #[Route('/admin', name: 'app_admin')]
     public function index(Request $request): Response
     {
-        $filterDate = $request->query->get('date');
-        $filterStatus = $request->query->get('status');
-        $sortOrder = strtoupper($request->query->get('order', 'ASC'));
-        $page = max(1, (int) $request->query->get('page', 1));
-        $limit = 15; // Items per page
+        // Parse filters from request
+        $filters = \AdminReservationFilters::fromRequest($request);
 
-        if (!in_array($sortOrder, ['ASC', 'DESC'])) {
-            $sortOrder = 'ASC';
-        }
-
-        $date = null;
-        if ($filterDate && '' !== $filterDate) {
-            try {
-                $date = new \DateTimeImmutable($filterDate);
-            } catch (\Exception $e) {
-                $date = null;
-            }
-        }
-
-        $status = null;
-        if ($filterStatus && '' !== $filterStatus) {
-            try {
-                $status = ReservationStatus::from($filterStatus);
-            } catch (\ValueError $e) {
-                $status = null;
-            }
-        }
-
-        $allReservations = $this->reservationRepository->findForAdminList($date, $status, $sortOrder);
+        $allReservations = $this->reservationRepository->findForAdminList($filters->date, $filters->status, $filters->sortOrder);
 
         $totalReservations = count($allReservations);
-        $offset = ($page - 1) * $limit;
-        $reservations = array_slice($allReservations, $offset, $limit);
+
+        $reservations = array_slice($allReservations, $filters->getOffset(), $filters->limit);
 
         $stats = $this->dashboardService->calculateStatistics($allReservations);
 
         $fullyBookedSlots = [];
         $slotStatistics = [];
 
-        if (null !== $date) {
-            $fullyBookedSlots = $this->dashboardService->getFullyBookedSlots($date);
-            $slotStatistics = $this->availabilityService->getSlotStatistics($date, ReservationType::Regular);
+        if (null !== $filters->date) {
+            $fullyBookedSlots = $this->dashboardService->getFullyBookedSlots($filters->date);
+            $slotStatistics = $this->availabilityService->getSlotStatistics($filters->date, ReservationType::Regular);
         }
 
-        $pagination = $this->dashboardService->buildPaginationData($page, $totalReservations, $limit);
+        $pagination = $this->dashboardService->buildPaginationData($filters->page, $totalReservations, $filters->limit);
 
         return $this->render('admin/index.html.twig', [
             'reservations' => $reservations,
-            'filterDate' => $date,
-            'filterStatus' => $filterStatus,
-            'sortOrder' => $sortOrder,
+            'filterDate' => $filters->date,
+            'filterStatus' => $filters->status,
+            'sortOrder' => $filters->sortOrder,
             'stats' => $stats,
             'fullyBookedSlots' => $fullyBookedSlots,
             'slotStatistics' => $slotStatistics,

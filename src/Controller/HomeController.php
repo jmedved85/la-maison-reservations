@@ -3,11 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Reservation;
-use App\Entity\ReservationStatus;
 use App\Exception\ReservationNotAvailableException;
 use App\Form\ReservationFormType;
+use App\Repository\ReservationRepository;
 use App\Service\ReservationAvailabilityService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,13 +15,12 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly ReservationAvailabilityService $availabilityService,
     ) {
     }
 
     #[Route('/', name: 'app_home')]
-    public function index(Request $request): Response
+    public function index(Request $request, ReservationRepository $reservationRepository): Response
     {
         $reservation = new Reservation();
         $form = $this->createForm(ReservationFormType::class, $reservation);
@@ -43,10 +41,7 @@ class HomeController extends AbstractController
                 throw new ReservationNotAvailableException('Selected time slot is not available. Please choose another time.');
             }
 
-            $reservation->setStatus(ReservationStatus::Pending);
-
-            $this->entityManager->persist($reservation);
-            $this->entityManager->flush();
+            $reservationRepository->save($reservation);
 
             // Store reservation data in session for modal display
             $this->storeInSession($request, $reservation);
