@@ -142,31 +142,4 @@ class ReservationAvailabilityService
     {
         return $this->reservationRepository->getTotalGuestsForDate($date);
     }
-
-    /**
-     * Get slot statistics for admin dashboard.
-     *
-     * @return array{timeSlot: string, totalGuests: int, remainingCapacity: int, isFullyBooked: bool, reservationCount: int}[]
-     */
-    public function getSlotStatistics(\DateTimeInterface $date, ReservationType $type): array
-    {
-        $slots = $this->timeSlotService->getAvailableTimeSlots($date, $type);
-        $statistics = [];
-
-        foreach ($slots as $timeSlot) {
-            $totalGuests = $this->reservationRepository->getTotalGuestsForSlot($date, $timeSlot, $type);
-            $remainingCapacity = $this->getRemainingCapacity($date, $timeSlot, $type);
-            $reservationCount = $this->reservationRepository->countActiveReservationsForSlot($date, $timeSlot, $type);
-
-            $statistics[] = [
-                'timeSlot' => $timeSlot,
-                'totalGuests' => $totalGuests,
-                'remainingCapacity' => $remainingCapacity,
-                'isFullyBooked' => $this->isSlotFullyBooked($date, $timeSlot, $type),
-                'reservationCount' => $reservationCount,
-            ];
-        }
-
-        return $statistics;
-    }
 }

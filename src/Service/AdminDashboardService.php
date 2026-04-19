@@ -5,12 +5,14 @@ namespace App\Service;
 use App\Entity\Reservation;
 use App\Entity\ReservationStatus;
 use App\Entity\ReservationType;
+use App\Repository\ReservationRepository;
 
 class AdminDashboardService
 {
     public function __construct(
         private readonly ReservationAvailabilityService $availabilityService,
         private readonly TimeSlotService $timeSlotService,
+        private readonly ReservationRepository $reservationRepository,
     ) {
     }
 
@@ -47,6 +49,33 @@ class AdminDashboardService
             'pendingCount' => $pendingCount,
             'confirmedCount' => $confirmedCount,
         ];
+    }
+
+    /**
+     * Get slot statistics for admin dashboard.
+     *
+     * @return array{timeSlot: string, totalGuests: int, remainingCapacity: int, isFullyBooked: bool, reservationCount: int}[]
+     */
+    public function getSlotStatistics(\DateTimeInterface $date, ReservationType $type): array
+    {
+        $slots = $this->timeSlotService->getAvailableTimeSlots($date, $type);
+        $statistics = [];
+
+        foreach ($slots as $timeSlot) {
+            $totalGuests = $this->reservationRepository->getTotalGuestsForSlot($date, $timeSlot, $type);
+            $remainingCapacity = $this->availabilityService->getRemainingCapacity($date, $timeSlot, $type);
+            $reservationCount = $this->reservationRepository->countActiveReservationsForSlot($date, $timeSlot, $type);
+
+            $statistics[] = [
+                'timeSlot' => $timeSlot,
+                'totalGuests' => $totalGuests,
+                'remainingCapacity' => $remainingCapacity,
+                'isFullyBooked' => $this->availabilityService->isSlotFullyBooked($date, $timeSlot, $type),
+                'reservationCount' => $reservationCount,
+            ];
+        }
+
+        return $statistics;
     }
 
     /**

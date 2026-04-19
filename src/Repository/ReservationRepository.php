@@ -251,18 +251,6 @@ class ReservationRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function save(Reservation $reservation): void
-    {
-        $this->getEntityManager()->persist($reservation);
-        $this->getEntityManager()->flush();
-    }
-
-    public function remove(Reservation $reservation): void
-    {
-        $this->getEntityManager()->remove($reservation);
-        $this->getEntityManager()->flush();
-    }
-
     /**
      * Calculate total number of guests for a specific date and time slot (using string time).
      * Excludes cancelled reservations.
@@ -316,5 +304,17 @@ class ReservationRepository extends ServiceEntityRepository
         ;
 
         return (int) ($result ?? 0);
+    }
+
+    public function save(Reservation $reservation): void
+    {
+        $this->getEntityManager()->persist($reservation);
+        $this->getEntityManager()->flush();
+    }
+
+    public function remove(Reservation $reservation): void
+    {
+        $this->getEntityManager()->remove($reservation);
+        $this->getEntityManager()->flush();
     }
 }

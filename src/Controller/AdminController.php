@@ -6,7 +6,6 @@ use App\Entity\ReservationStatus;
 use App\Entity\ReservationType;
 use App\Repository\ReservationRepository;
 use App\Service\AdminDashboardService;
-use App\Service\ReservationAvailabilityService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +16,6 @@ class AdminController extends AbstractController
     public function __construct(
         private readonly ReservationRepository $reservationRepository,
         private readonly AdminDashboardService $dashboardService,
-        private readonly ReservationAvailabilityService $availabilityService,
     ) {
     }
 
@@ -40,7 +38,7 @@ class AdminController extends AbstractController
 
         if (null !== $filters->date) {
             $fullyBookedSlots = $this->dashboardService->getFullyBookedSlots($filters->date);
-            $slotStatistics = $this->availabilityService->getSlotStatistics($filters->date, ReservationType::Regular);
+            $slotStatistics = $this->dashboardService->getSlotStatistics($filters->date, ReservationType::Regular);
         }
 
         $pagination = $this->dashboardService->buildPaginationData($filters->page, $totalReservations, $filters->limit);
