@@ -17,34 +17,34 @@ class TimeSlot
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
-    private ?\DateTimeInterface $time = null;
+    private \DateTimeImmutable $time;
 
     #[ORM\Column(length: 50)]
-    private ?string $slotType = null;
+    private string $slotType = '';
 
     #[ORM\Column]
-    private ?int $minCapacity = null;
+    private int $minCapacity = 1;
 
     #[ORM\Column]
-    private ?int $maxCapacity = null;
+    private int $maxCapacity = 1;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column]
-    private ?bool $isActive = true;
+    private bool $isActive = true;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTime(): ?\DateTimeInterface
+    public function getTime(): ?\DateTimeImmutable
     {
         return $this->time;
     }
 
-    public function setTime(\DateTimeInterface $time): static
+    public function setTime(\DateTimeImmutable $time): static
     {
         $this->time = $time;
 
@@ -53,7 +53,7 @@ class TimeSlot
 
     public function getTimeFormatted(): string
     {
-        return $this->time ? $this->time->format('H:i') : '';
+        return $this->time->format('H:i');
     }
 
     public function getSlotType(): ?string

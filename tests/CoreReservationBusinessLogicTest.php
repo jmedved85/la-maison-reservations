@@ -31,8 +31,6 @@ class CoreReservationBusinessLogicTest extends TestCase
 
         // Reference code should be generated automatically
         $referenceCode = $reservation->getReferenceCode();
-        $this->assertNotNull($referenceCode, 'Reference code must be generated automatically');
-
         // Must follow LM-XXXXX format (5 alphanumeric uppercase characters)
         $this->assertMatchesRegularExpression(
             '/^LM-[A-Z0-9]{5}$/',
@@ -157,7 +155,7 @@ class CoreReservationBusinessLogicTest extends TestCase
         $reservation->onPrePersist(); // Trigger reference code generation and timestamps
 
         // Verify generated fields
-        $this->assertNotNull($reservation->getReferenceCode());
+        $this->assertMatchesRegularExpression('/^LM-[A-Z0-9]{5}$/', $reservation->getReferenceCode());
         $this->assertNotNull($reservation->getCreatedAt());
         $this->assertNotNull($reservation->getUpdatedAt());
     }

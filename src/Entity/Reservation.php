@@ -22,7 +22,7 @@ class Reservation
     private ?int $id = null;
 
     #[ORM\Column(length: 8, unique: true)]
-    private ?string $referenceCode = null;
+    private string $referenceCode = '';
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Full name is required')]
@@ -32,12 +32,12 @@ class Reservation
         minMessage: 'Name must be at least {{ limit }} characters',
         maxMessage: 'Name cannot be longer than {{ limit }} characters'
     )]
-    private ?string $fullName = null;
+    private string $fullName = '';
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Email is required')]
     #[Assert\Email(message: 'Please provide a valid email address')]
-    private ?string $email = null;
+    private string $email = '';
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: 'Phone number is required')]
@@ -47,15 +47,15 @@ class Reservation
         minMessage: 'Phone number must be at least {{ limit }} characters',
         maxMessage: 'Phone number cannot be longer than {{ limit }} characters'
     )]
-    private ?string $phoneNumber = null;
+    private string $phoneNumber = '';
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     #[Assert\NotBlank(message: 'Reservation date is required')]
-    private ?\DateTimeInterface $reservationDate = null;
+    private \DateTimeImmutable $reservationDate;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     #[Assert\NotBlank(message: 'Time slot is required')]
-    private ?\DateTimeInterface $timeSlot = null;
+    private \DateTimeImmutable $timeSlot;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Party size is required')]
@@ -64,7 +64,7 @@ class Reservation
         max: 12,
         notInRangeMessage: 'Party size must be between {{ min }} and {{ max }} guests'
     )]
-    private ?int $partySize = null;
+    private int $partySize = 0;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(
@@ -80,13 +80,13 @@ class Reservation
     private ReservationType $reservationType = ReservationType::Regular;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    private ?\DateTimeInterface $updatedAt = null;
+    private \DateTimeImmutable $updatedAt;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    private ?\DateTimeInterface $deletedAt = null;
+    private ?\DateTimeImmutable $deletedAt = null;
 
     #[ORM\PrePersist]
     public function onPrePersist(): void
@@ -94,7 +94,7 @@ class Reservation
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
 
-        if (null === $this->referenceCode) {
+        if ('' === $this->referenceCode) {
             $this->generateReferenceCode();
         }
     }
@@ -123,7 +123,7 @@ class Reservation
         return $this->id;
     }
 
-    public function getReferenceCode(): ?string
+    public function getReferenceCode(): string
     {
         return $this->referenceCode;
     }
@@ -171,31 +171,31 @@ class Reservation
         return $this;
     }
 
-    public function getReservationDate(): ?\DateTimeInterface
+    public function getReservationDate(): ?\DateTimeImmutable
     {
         return $this->reservationDate;
     }
 
-    public function setReservationDate(\DateTimeInterface $reservationDate): static
+    public function setReservationDate(\DateTimeImmutable $reservationDate): static
     {
         $this->reservationDate = $reservationDate;
 
         return $this;
     }
 
-    public function getTimeSlot(): ?\DateTimeInterface
+    public function getTimeSlot(): ?\DateTimeImmutable
     {
         return $this->timeSlot;
     }
 
-    public function setTimeSlot(\DateTimeInterface $timeSlot): static
+    public function setTimeSlot(\DateTimeImmutable $timeSlot): static
     {
         $this->timeSlot = $timeSlot;
 
         return $this;
     }
 
-    public function getPartySize(): ?int
+    public function getPartySize(): int
     {
         return $this->partySize;
     }
@@ -243,36 +243,36 @@ class Reservation
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeInterface
+    public function getDeletedAt(): ?\DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): static
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): static
     {
         $this->deletedAt = $deletedAt;
 

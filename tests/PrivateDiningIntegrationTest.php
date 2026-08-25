@@ -153,10 +153,8 @@ class PrivateDiningIntegrationTest extends KernelTestCase
 
         $this->assertFalse($isAvailable, 'Slot should not be available for second private dining reservation');
 
-        if (false === $isAvailable) {
-            $this->expectException(ReservationNotAvailableException::class);
-            throw new ReservationNotAvailableException('Selected time slot is not available. Please choose another time.');
-        }
+        $this->expectException(ReservationNotAvailableException::class);
+        throw new ReservationNotAvailableException('Selected time slot is not available. Please choose another time.');
     }
 
     protected function tearDown(): void
